@@ -20,7 +20,6 @@ class ServiceRequest extends Model
         'user_id',
         'service_id',
         'budget',
-        'duration',
         'preferred_date',
         'preferred_time',
         'location',

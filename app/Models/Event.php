@@ -20,9 +20,10 @@ class Event extends Model
         'name',
         'description',
         'start_date',
-        'start_time',
+        'end_date',
         'category',
         'status',
+        'color',
     ];
 
     public function eventParticipants(): HasMany

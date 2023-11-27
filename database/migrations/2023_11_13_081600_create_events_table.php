@@ -16,10 +16,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->date('start_date')->default(Carbon::now()->toDateString());
-            $table->time('start_time')->default('00:00:00');
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
             $table->string('category')->nullable();
             $table->char('status')->default('pending');
+            $table->char('color')->nullable();
             $table->timestamps();
         });
     }

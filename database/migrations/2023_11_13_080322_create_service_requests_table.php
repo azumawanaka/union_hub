@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('service_id');
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
             $table->float('budget')->default(0.00);
-            $table->string('duration');
             $table->date('preferred_date');
             $table->time('preferred_time');
             $table->string('location')->nullable();
