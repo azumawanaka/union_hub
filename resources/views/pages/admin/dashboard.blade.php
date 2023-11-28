@@ -1,7 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content')
-<div class="container">
-   Hi admin!
-</div>
+This is a dashboard
 @endsection
