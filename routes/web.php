@@ -20,4 +20,7 @@ Route::middleware(['auth', 'user'])->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+
+    // Service Controller
+    Route::resource('service', \App\Http\Controllers\ServiceController::class);
 });
