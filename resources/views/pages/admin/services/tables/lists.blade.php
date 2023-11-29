@@ -4,7 +4,7 @@
             <div class="card-body">
                 <h4 class="card-title">Services</h4>
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered zero-configuration">
+                    <table id="service_tbl" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -19,8 +19,26 @@
                         <tbody>
                             <tr>
                                 <td>1</td>
-                                <td>Beauty</td>
+                                <td><span class="badge badge-primary px-2">Beauty</span></td>
                                 <td>Eyelash extensions</td>
+                                <td>Lorem ipsum dolor sit, amet ....</td>
+                                <td>John Clint</td>
+                                <td>2011/04/25</td>
+                                <td class="text-center">
+                                    <span>
+                                        <a href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit">
+                                            <i class="fa fa-pencil color-muted m-r-5"></i>
+                                        </a>
+                                        <a href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Close">
+                                            <i class="fa fa-close color-danger"></i>
+                                        </a>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="badge badge-info px-2">Spa and Wellness</span></td>
+                                <td>Salt scrub</td>
                                 <td>Lorem ipsum dolor sit, amet ....</td>
                                 <td>John Clint</td>
                                 <td>2011/04/25</td>
