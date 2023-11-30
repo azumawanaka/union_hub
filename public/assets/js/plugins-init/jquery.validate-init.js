@@ -56,7 +56,14 @@ jQuery(".form-valide").validate({
         },
         "val-terms": {
             required: !0
-        }
+        },
+        "val-service-type": {
+            required: !0
+        },
+        "val-name": {
+            required: !0,
+            minlength: 3
+        },
     },
     messages: {
         "val-username": {
@@ -83,7 +90,12 @@ jQuery(".form-valide").validate({
         "val-digits": "Please enter only digits!",
         "val-number": "Please enter a number!",
         "val-range": "Please enter a number between 1 and 5!",
-        "val-terms": "You must agree to the service terms!"
+        "val-terms": "You must agree to the service terms!",
+        "val-service-type": "Please select a service!",
+        "val-name": {
+            required: "Please enter a service name!",
+            minlength: "Service name must consist of at least 3 characters"
+        },
     },
 
     ignore: [],

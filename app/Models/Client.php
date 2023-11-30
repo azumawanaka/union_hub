@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Client extends Model
 {
-    use Notifiable;
+    use Notifiable, HasFactory;
 
     /**
      * The attributes that are mass assignable.

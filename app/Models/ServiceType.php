@@ -11,6 +11,8 @@ class ServiceType extends Model
 {
     use Notifiable, HasFactory;
 
+    protected $table = 'service_types';
+
     /**
      * The attributes that are mass assignable.
      *

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\GetAllServicesAction;
+use App\Actions\GetAllServiceTypesAction;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -11,9 +13,12 @@ class ServiceController extends Controller
 
     }
 
-    public function index()
+    public function index(GetAllServicesAction $getAllServicesAction, GetAllServiceTypesAction $getAllServiceTypesAction)
     {
-        return view('pages.admin.services.index');
+        return view('pages.admin.services.index', [
+            'services' => $getAllServicesAction->execute(),
+            'serviceTypes'  => $getAllServiceTypesAction->execute(),
+        ]);
     }
 
     /**

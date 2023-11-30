@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Service extends Model
 {
-    use Notifiable;
+    use Notifiable, HasFactory;
+
+    protected $table = 'services';
 
     /**
      * The attributes that are mass assignable.

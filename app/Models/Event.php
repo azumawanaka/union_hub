@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Event extends Model
 {
-    use Notifiable;
+    use Notifiable, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +28,6 @@ class Event extends Model
 
     public function eventParticipants(): HasMany
     {
-        return $this->hasMany(EventParticipants::class);
+        return $this->hasMany(EventParticipant::class);
     }
 }
