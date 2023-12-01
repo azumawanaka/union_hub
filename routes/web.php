@@ -23,4 +23,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Service Controller
     Route::resource('service', \App\Http\Controllers\ServiceController::class);
+
+    // Client Controller
+    Route::get('client/search', [\App\Http\Controllers\ClientController::class, 'search'])->name('client.search');
 });

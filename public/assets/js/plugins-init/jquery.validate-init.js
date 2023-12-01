@@ -147,8 +147,4 @@ jQuery(".form-valide-with-icon").validate({
     success: function(e) {
         jQuery(e).closest(".form-group").removeClass("is-invalid").addClass("is-valid")
     }
-
-
-
-
 });
