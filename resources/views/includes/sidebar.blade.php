@@ -12,8 +12,7 @@
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="{{ route('service.index') }}">Services</a></li>
-                    <li><a href="#">Service Types</a></li>
-                    <li><a href="#">Service Requests</a></li>
+                    <li><a href="{{ route('service_request.index') }}">Service Requests</a></li>
                 </ul>
             </li>
             <li class="nav-label">Apps</li>

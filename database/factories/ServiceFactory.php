@@ -19,9 +19,10 @@ class ServiceFactory extends Factory
      */
     public function definition(): array
     {
+        $array = [1, 2];
         return [
-            'service_type_id' => ServiceType::factory()->create(),
-            'title' => 'Eyelash extensions',
+            'service_type_id' => $array[array_rand($array)],
+            'title' => fake()->word,
             'added_by' => User::factory()->create(),
             'client_id' => Client::factory()->create(),
         ];

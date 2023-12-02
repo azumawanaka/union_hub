@@ -28,8 +28,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('service', \App\Http\Controllers\ServiceController::class)->except([
         'create', 'edit', 'show', 'update'
     ]);
-    Route::post('service/all', [\App\Http\Controllers\ServiceController::class, 'getAllServices'])->name('service.all');
     Route::get('service/{id}/get_service', [\App\Http\Controllers\ServiceController::class, 'getServiceById'])->name('service.info');
+    Route::post('service/all', [\App\Http\Controllers\ServiceController::class, 'getAllServices'])->name('service.all');
     Route::post('service/{id}/update_service', [\App\Http\Controllers\ServiceController::class, 'updateService'])->name('service.update_service');
+
+    // Service Request Controller
+    Route::resource('service_request', \App\Http\Controllers\ServiceRequestController::class)->except([
+        'create', 'edit', 'show', 'update'
+    ]);
 
 });
