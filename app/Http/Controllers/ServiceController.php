@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\DeleteServiceAction;
 use App\Actions\GetAllServicesAction;
 use App\Actions\GetAllServiceTypesAction;
+use App\Actions\GetServiceByParamAction;
+use App\Actions\StoreServiceAction;
+use App\Actions\UpdateServiceAction;
+use App\Http\Requests\ServiceRequest;
+use App\Models\Service;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -22,50 +29,69 @@ class ServiceController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * @param ServiceRequest $serviceRequest
+     * @param StoreServiceAction $storeServiceAction
+     *
+     * @return mixed
      */
-    public function create()
+    public function store(ServiceRequest $serviceRequest, StoreServiceAction $storeServiceAction)
     {
-        //
+        try {
+            $storeServiceAction->execute($serviceRequest->all());
+            return redirect()->back()->with('success', 'Service successfully created.');
+        } catch (\Throwable $th) {
+            $errorMessage = $th->getMessage();
+            return redirect()->back()->with('error', $errorMessage);
+        }
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param string $id
+     * @param GetServiceByParamAction $getParamAction
+     *
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function getServiceById(string $id, GetServiceByParamAction $getParamAction): JsonResponse
     {
-        //
+        $payload = [
+            'key' => 'id',
+            'value' => $id,
+        ];
+        $response = $getParamAction->execute($payload);
+        return response()->json($response);
     }
 
     /**
-     * Display the specified resource.
+     * @param Request $request
+     * @param Service $service
+     * @param UpdateServiceAction $updateServiceAction
+     *
+     * @return mixed
      */
-    public function show(string $id)
+    public function updateService(Request $request, Service $service, UpdateServiceAction $updateServiceAction)
     {
-        //
+        try {
+            $updateServiceAction->execute($service->id, $request->all());
+            return redirect()->back()->with('success', 'Service successfully updated.');
+        } catch (\Throwable $th) {
+            $errorMessage = $th->getMessage();
+            return redirect()->back()->with('error', $errorMessage);
+        }
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * @param string $id
+     * @param DeleteServiceAction $deleteServiceAction
+     *
+     * @return mixed
      */
-    public function edit(string $id)
+    public function destroy(string $id, DeleteServiceAction $deleteServiceAction)
     {
-        //
-    }
+        $response = $deleteServiceAction->execute($id);
+        if ($response) {
+            return redirect()->back()->with('success', 'Service successfully deleted.');
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->back()->with('error', 'Service not successfully deleted. Please try again.');
     }
 }

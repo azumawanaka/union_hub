@@ -39,7 +39,11 @@
                 @include('includes.breadcrumbs')
 
                 <div class="container-fluid">
+
+                    @include('includes.alerts.redirect-response')
+
                     @yield('content')
+
                 </div>
 
             </div>

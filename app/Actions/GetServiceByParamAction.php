@@ -4,7 +4,7 @@ namespace App\Actions;
 
 use App\Models\Service;
 
-class GetAllServicesAction
+class GetServiceByParamAction
 {
     protected $model;
 
@@ -13,8 +13,8 @@ class GetAllServicesAction
         $this->model = $model;
     }
 
-    public function execute()
+    public function execute(array $params)
     {
-        return $this->model->newQuery()->orderBy('created_at', 'desc')->get();
+        return $this->model->newQuery()->where($params['key'], $params['value'])->first();
     }
 }

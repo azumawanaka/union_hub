@@ -22,7 +22,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     // Service Controller
-    Route::resource('service', \App\Http\Controllers\ServiceController::class);
+    Route::resource('service', \App\Http\Controllers\ServiceController::class)->except([
+        'create', 'edit', 'show', 'update'
+    ]);
+    Route::get('service/{id}/get_service', [\App\Http\Controllers\ServiceController::class, 'getServiceById'])->name('service.info');
+    Route::post('service/{service}/update_service', [\App\Http\Controllers\ServiceController::class, 'updateService'])->name('service.update_service');
 
     // Client Controller
     Route::get('client/search', [\App\Http\Controllers\ClientController::class, 'search'])->name('client.search');
