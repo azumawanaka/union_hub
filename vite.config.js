@@ -8,6 +8,7 @@ export default defineConfig({
                 'resources/sass/app.scss',
                 'resources/js/validator.js',
                 'resources/js/clients.js',
+                'resources/js/services.js',
                 'resources/js/app.js',
             ],
             refresh: true,

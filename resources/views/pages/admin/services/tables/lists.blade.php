@@ -13,51 +13,7 @@
                 @include('pages.admin.services.modals.service-modal')
 
                 <div class="table-responsive">
-                    <table id="service_tbl" class="table table-striped table-bordered">
-                        {{-- <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Type</th>
-                                <th>Name</th>
-                                <th width="350">Description</th>
-                                <th>Client</th>
-                                <th>Added At</th>
-                                <th width="30">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($services as $service)
-                                <tr>
-                                    <td>{{ $service->id }}</td>
-                                    <td><span class="badge badge-primary px-2">{{ $service?->serviceType?->name }}</span></td>
-                                    <td>{{ $service?->title }}</td>
-                                    <td>{!! $service?->description ?? '----' !!}</td>
-                                    <td>{{ $service?->client?->name }}</td>
-                                    <td>{{ $service?->created_at->added_at() }}</td>
-                                    <td class="text-center">
-                                        <span>
-                                            <span type="button"
-                                                id="edit_service"
-                                                class="btn btn-xs btn-info"
-                                                data-service="{{ $service->id }}"
-                                                data-get="{{ route("service.info", $service->id) }}"
-                                                data-href='{{ route("service.update_service", $service) }}'>
-                                                <i class="fa fa-pencil color-muted m-r-5"></i>
-                                            </span>
-
-                                            <!-- Button trigger modal -->
-                                            <span type="button"
-                                                id="delete_service"
-                                                class="btn btn-xs btn-danger"
-                                                data-href='{{ route("service.destroy", $service->id) }}'>
-                                                <i class="fa fa-close color-danger"></i>
-                                            </span>
-                                        </span>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody> --}}
-                    </table>
+                    <table id="service_tbl" class="table table-striped table-bordered"></table>
                 </div>
             </div>
         </div>
@@ -71,7 +27,6 @@
 
     <script>
         $(document).ready(function() {
-
             $('#service_tbl').DataTable({
                 processing: true,
                 serverSide: true,
@@ -100,92 +55,20 @@
                         title: 'Actions',
                         render: function (data, type, row) {
                             var editButton = '<button id="edit_service" class="btn btn-xs btn-primary mr-1" data-href="' +
-                                 '{{ route("service.update_service", ":id") }}"'.replace(':id', data.s_id) +
-                                 '" data-get="' +
-                                 '{{ route("service.info", ":id") }}"'.replace(':id', data.s_id) +
-                                 '">Edit</button>';
+                                '{{ route("service.update_service", ":id") }}"'.replace(':id', data.s_id) +
+                                '" data-get="' +
+                                '{{ route("service.info", ":id") }}"'.replace(':id', data.s_id) +
+                                '">Edit</button>';
                             var deleteButton = '<button id="delete_service" class="btn btn-xs btn-danger mr-1" data-href="' +
-                                 '{{ route("service.destroy", ":id") }}"'.replace(':id', data.s_id) +
-                                 '">Delete</button>';
+                                '{{ route("service.destroy", ":id") }}"'.replace(':id', data.s_id) +
+                                '">Delete</button>';
                             return editButton + deleteButton;
                         }
                     }
                 ]
             });
-
-            $(document).on('click', '#edit_service', function () {
-                var editUrl = $(this).data('href');
-                var serviceUrl = $(this).data('get');
-
-                emptyFields();
-
-                const form = $('#serviceModal form')
-                    form.attr('action', editUrl);
-
-                getService(serviceUrl);
-
-                $('#serviceModal').modal('show');
-            });
-
-
-            $(document).on('click', '#delete_service', function(e) {
-                e.preventDefault();
-                serviceRoute = $(this).attr('data-href');
-
-                $('#deleteConfirmationModal form').attr('action', serviceRoute);
-
-                $('#deleteConfirmationModal').modal('show');
-            });
-
-            $(document).on('click', '#add_service', function(e) {
-                e.preventDefault();
-                serviceRoute = $(this).attr('data-href');
-
-                $('#serviceModal form').attr('action', serviceRoute);
-
-                emptyFields();
-
-                $('#serviceModal').modal('show');
-            });
-
-            function getService(route) {
-                window.axios.get(route)
-                    .then(function(response) {
-                        const serviceResponseData = response.data;
-                        setUpFields(serviceResponseData);
-                    })
-                    .catch(function(error) {
-                        console.error('Error fetching data:', error);
-                    });
-            }
-
-            function emptyFields() {
-                const emptyPayload = {
-                    'title': '',
-                    'service_type_id': '',
-                    'client_id': '',
-                    'description': '',
-                };
-                setUpFields(emptyPayload);
-            }
-
-            function setUpFields(v) {
-                const form = $('#serviceModal form')
-
-                form.find('#name').val(v.title).focus();
-                form.find('#service_type_id').val(v.service_type_id);
-
-                form.find('#client_id').val(v.client_id);
-                $('#client_id').selectpicker('refresh');
-
-                form.find('#descriptions').val(v.description);
-            }
-
-            $(document).on('click', '.close-modal', function () {
-                $('.modal').modal('hide');
-            });
         });
     </script>
 
-    @vite(['resources/js/validator.js','resources/js/clients.js'])
+    @vite(['resources/js/validator.js','resources/js/clients.js','resources/js/services.js'])
 @endpush
