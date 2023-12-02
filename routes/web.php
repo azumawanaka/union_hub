@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes();
 
+// Client Controller
+Route::get('client/search', [\App\Http\Controllers\ClientController::class, 'search'])->name('client.search');
+
 Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });
@@ -25,9 +28,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('service', \App\Http\Controllers\ServiceController::class)->except([
         'create', 'edit', 'show', 'update'
     ]);
+    Route::post('service/all', [\App\Http\Controllers\ServiceController::class, 'getAllServices'])->name('service.all');
     Route::get('service/{id}/get_service', [\App\Http\Controllers\ServiceController::class, 'getServiceById'])->name('service.info');
-    Route::post('service/{service}/update_service', [\App\Http\Controllers\ServiceController::class, 'updateService'])->name('service.update_service');
+    Route::post('service/{id}/update_service', [\App\Http\Controllers\ServiceController::class, 'updateService'])->name('service.update_service');
 
-    // Client Controller
-    Route::get('client/search', [\App\Http\Controllers\ClientController::class, 'search'])->name('client.search');
 });

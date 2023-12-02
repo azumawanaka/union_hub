@@ -15,6 +15,6 @@ class GetAllServicesAction
 
     public function execute()
     {
-        return $this->model->newQuery()->orderBy('created_at', 'desc')->get();
+        return $this->model->newQuery()->orderBy('created_at', 'desc')->paginate();
     }
 }

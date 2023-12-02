@@ -9,12 +9,7 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        $('#service_tbl').DataTable({
-            paging: true,
-            searching: true,
-            ordering: true,
-            order: [[6, 'desc']]
-        });
+
     });
 </script>
 @endpush

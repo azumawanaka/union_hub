@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
@@ -27,6 +28,15 @@ class Service extends Model
         'preview_img',
         'client_id',
     ];
+
+    // protected $appends = [
+    //     'added_at',
+    // ];
+
+    // public function getAddedAtHumanAttribute(): string
+    // {
+    //     return Carbon::parse($this->created_at)->diffForHumans();
+    // }
 
     public function serviceType(): BelongsTo
     {

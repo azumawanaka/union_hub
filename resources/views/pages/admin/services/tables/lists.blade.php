@@ -14,7 +14,7 @@
 
                 <div class="table-responsive">
                     <table id="service_tbl" class="table table-striped table-bordered">
-                        <thead>
+                        {{-- <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Type</th>
@@ -29,11 +29,11 @@
                             @foreach ($services as $service)
                                 <tr>
                                     <td>{{ $service->id }}</td>
-                                    <td><span class="badge badge-primary px-2">{{ $service?->title }}</span></td>
-                                    <td>{{ $service?->serviceType?->name }}</td>
+                                    <td><span class="badge badge-primary px-2">{{ $service?->serviceType?->name }}</span></td>
+                                    <td>{{ $service?->title }}</td>
                                     <td>{!! $service?->description ?? '----' !!}</td>
                                     <td>{{ $service?->client?->name }}</td>
-                                    <td>{{ $service?->created_at->diffForHumans() }}</td>
+                                    <td>{{ $service?->created_at->added_at() }}</td>
                                     <td class="text-center">
                                         <span>
                                             <span type="button"
@@ -56,7 +56,7 @@
                                     </td>
                                 </tr>
                             @endforeach
-                        </tbody>
+                        </tbody> --}}
                     </table>
                 </div>
             </div>
@@ -69,10 +69,64 @@
 @push('scripts')
     <script src="{{ asset('assets/plugins/validation/jquery.validate.min.js') }}"></script>
 
-    @vite(['resources/js/validator.js','resources/js/services.js'])
-
     <script>
         $(document).ready(function() {
+
+            $('#service_tbl').DataTable({
+                processing: true,
+                serverSide: true,
+                paging: true,
+                searching: true,
+                ordering: true,
+                order: [[5, 'desc']],
+                lengthMenu: [10, 25, 50, 100],
+                pageLength: 10,
+                ajax: {
+                    url: 'service/all',
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                },
+                columns: [
+                    { data: 's_id', name: 'services.id', title: 'ID' },
+                    { data: 'title', name: 'title', title: 'Name' },
+                    { data: 's_name', name: 'service_types.name', title: 'Type' },
+                    { data: 'description', name: 'description', title: 'Description' },
+                    { data: 'c_name', name: 'clients.name', title: 'Client' },
+                    { data: 'added_at', name: 'added_at', title: 'Added at' },
+                    {
+                        data: null,
+                        title: 'Actions',
+                        render: function (data, type, row) {
+                            var editButton = '<button id="edit_service" class="btn btn-xs btn-primary mr-1" data-href="' +
+                                 '{{ route("service.update_service", ":id") }}"'.replace(':id', data.s_id) +
+                                 '" data-get="' +
+                                 '{{ route("service.info", ":id") }}"'.replace(':id', data.s_id) +
+                                 '">Edit</button>';
+                            var deleteButton = '<button id="delete_service" class="btn btn-xs btn-danger mr-1" data-href="' +
+                                 '{{ route("service.destroy", ":id") }}"'.replace(':id', data.s_id) +
+                                 '">Delete</button>';
+                            return editButton + deleteButton;
+                        }
+                    }
+                ]
+            });
+
+            $(document).on('click', '#edit_service', function () {
+                var editUrl = $(this).data('href');
+                var serviceUrl = $(this).data('get');
+
+                emptyFields();
+
+                const form = $('#serviceModal form')
+                    form.attr('action', editUrl);
+
+                getService(serviceUrl);
+
+                $('#serviceModal').modal('show');
+            });
+
 
             $(document).on('click', '#delete_service', function(e) {
                 e.preventDefault();
@@ -90,21 +144,6 @@
                 $('#serviceModal form').attr('action', serviceRoute);
 
                 emptyFields();
-
-                $('#serviceModal').modal('show');
-            });
-
-            $(document).on('click', '#edit_service', function(e) {
-                e.preventDefault();
-                serviceRoute = $(this).attr('data-href');
-
-                const form = $('#serviceModal form')
-                form.attr('action', serviceRoute);
-
-                emptyFields();
-
-                const getRoute = $(this).attr('data-get');
-                getService(getRoute);
 
                 $('#serviceModal').modal('show');
             });
@@ -133,7 +172,7 @@
             function setUpFields(v) {
                 const form = $('#serviceModal form')
 
-                form.find('#name').val(v.title);
+                form.find('#name').val(v.title).focus();
                 form.find('#service_type_id').val(v.service_type_id);
 
                 form.find('#client_id').val(v.client_id);
@@ -147,4 +186,6 @@
             });
         });
     </script>
+
+    @vite(['resources/js/validator.js','resources/js/clients.js'])
 @endpush

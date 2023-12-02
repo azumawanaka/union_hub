@@ -20,11 +20,60 @@ class ServiceController extends Controller
 
     }
 
-    public function index(GetAllServicesAction $getAllServicesAction, GetAllServiceTypesAction $getAllServiceTypesAction)
+    public function index(GetAllServiceTypesAction $getAllServiceTypesAction)
     {
         return view('pages.admin.services.index', [
-            'services' => $getAllServicesAction->execute(),
             'serviceTypes'  => $getAllServiceTypesAction->execute(),
+        ]);
+    }
+
+    public function getAllServices(Request $request, GetAllServicesAction $getAllServicesAction)
+    {
+        $draw = $request->input('draw');
+        $start = $request->input('start');
+        $length = $request->input('length');
+        $order = $request->input('order');
+        $search = $request->input('search');
+
+        $query = Service::select(
+                'services.id as s_id',
+                'title',
+                'description',
+                'clients.name as c_name',
+                'service_types.name as s_name',
+                'services.created_at as added_at')
+            ->leftJoin('service_types', 'services.service_type_id', '=', 'service_types.id')
+            ->leftJoin('clients','services.client_id', '=', 'clients.id');
+
+        if (!empty($search['value'])) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search['value'] . '%');
+                $q->orWhere('services.id', 'like', '%' . $search['value'] . '%');
+                $q->orWhere('description', 'like', '%' . $search['value'] . '%');
+                $q->orWhere('services.created_at', 'like', '%' . $search['value'] . '%');
+                $q->orWhere('service_types.name', 'like', '%' . $search['value'] . '%');
+                $q->orWhere('clients.name', 'like', '%' . $search['value'] . '%');
+            });
+        }
+
+        if (!empty($order) && count($order) > 0) {
+            $columnIndex = $order[0]['column'];
+            $columnName = $request->input("columns.$columnIndex.name");
+            $columnDirection = $order[0]['dir'];
+
+            $query->orderBy($columnName, $columnDirection);
+        }
+
+        // Paginate the results
+        $services = $query->skip($start)->take($length)->get();
+
+        $totalRecords = Service::count();
+
+        return response()->json([
+            'draw' => $draw,
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalRecords,
+            'data' => $services,
         ]);
     }
 
@@ -63,15 +112,15 @@ class ServiceController extends Controller
 
     /**
      * @param Request $request
-     * @param Service $service
+     * @param string $id
      * @param UpdateServiceAction $updateServiceAction
      *
      * @return mixed
      */
-    public function updateService(Request $request, Service $service, UpdateServiceAction $updateServiceAction)
+    public function updateService(Request $request, string $id, UpdateServiceAction $updateServiceAction)
     {
         try {
-            $updateServiceAction->execute($service->id, $request->all());
+            $updateServiceAction->execute($id, $request->all());
             return redirect()->back()->with('success', 'Service successfully updated.');
         } catch (\Throwable $th) {
             $errorMessage = $th->getMessage();
