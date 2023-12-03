@@ -2,6 +2,6 @@
 
 @section('content')
 
-    Service requests here
+    @include('pages.admin.service_requests.tables.lists')
 
 @endsection

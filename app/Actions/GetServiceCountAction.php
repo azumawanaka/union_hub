@@ -4,7 +4,7 @@ namespace App\Actions;
 
 use App\Models\Service;
 
-class GetAllServicesAction
+class GetServiceCountAction
 {
     protected $model;
 
@@ -15,6 +15,6 @@ class GetAllServicesAction
 
     public function execute()
     {
-        return $this->model->newQuery()->orderBy('created_at', 'desc')->paginate();
+        return $this->model->count();
     }
 }

@@ -36,5 +36,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('service_request', \App\Http\Controllers\ServiceRequestController::class)->except([
         'create', 'edit', 'show', 'update'
     ]);
+    Route::post('service_request/all', [\App\Http\Controllers\ServiceRequestController::class, 'getAllServiceRequests'])->name('service_request.all');
 
 });

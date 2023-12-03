@@ -29,15 +29,6 @@ class Service extends Model
         'client_id',
     ];
 
-    // protected $appends = [
-    //     'added_at',
-    // ];
-
-    // public function getAddedAtHumanAttribute(): string
-    // {
-    //     return Carbon::parse($this->created_at)->diffForHumans();
-    // }
-
     public function serviceType(): BelongsTo
     {
         return $this->belongsTo(ServiceType::class);

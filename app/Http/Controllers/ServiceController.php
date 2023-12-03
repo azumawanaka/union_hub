@@ -3,21 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Actions\DeleteServiceAction;
-use App\Actions\GetAllServicesAction;
 use App\Actions\GetAllServiceTypesAction;
 use App\Actions\GetServiceByParamAction;
+use App\Actions\GetServiceCountAction;
+use App\Actions\SelectServicesAction;
 use App\Actions\StoreServiceAction;
 use App\Actions\UpdateServiceAction;
 use App\Http\Requests\ServiceRequest;
-use App\Models\Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
-    public function __construct()
-    {
+    private $selectServicesAction;
+    private $getServiceCountAction;
 
+    public function __construct(
+        SelectServicesAction $selectServicesAction,
+        GetServiceCountAction $getServiceCountAction
+    ) {
+        $this->selectServicesAction = $selectServicesAction;
+        $this->getServiceCountAction = $getServiceCountAction;
     }
 
     public function index(GetAllServiceTypesAction $getAllServiceTypesAction)
@@ -27,7 +33,11 @@ class ServiceController extends Controller
         ]);
     }
 
-    public function getAllServices(Request $request, GetAllServicesAction $getAllServicesAction)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getAllServices(Request $request): JsonResponse
     {
         $draw = $request->input('draw');
         $start = $request->input('start');
@@ -35,39 +45,12 @@ class ServiceController extends Controller
         $order = $request->input('order');
         $search = $request->input('search');
 
-        $query = Service::select(
-                'services.id as s_id',
-                'title',
-                'description',
-                'clients.name as c_name',
-                'service_types.name as s_name',
-                'services.created_at as added_at')
-            ->leftJoin('service_types', 'services.service_type_id', '=', 'service_types.id')
-            ->leftJoin('clients','services.client_id', '=', 'clients.id');
+        $query = $this->selectServicesAction->execute();
+        $this->applySearchConditions($query, $search);
+        $this->applyOrdering($query, $order, $request);
 
-        if (!empty($search['value'])) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search['value'] . '%');
-                $q->orWhere('services.id', 'like', '%' . $search['value'] . '%');
-                $q->orWhere('description', 'like', '%' . $search['value'] . '%');
-                $q->orWhere('services.created_at', 'like', '%' . $search['value'] . '%');
-                $q->orWhere('service_types.name', 'like', '%' . $search['value'] . '%');
-                $q->orWhere('clients.name', 'like', '%' . $search['value'] . '%');
-            });
-        }
-
-        if (!empty($order) && count($order) > 0) {
-            $columnIndex = $order[0]['column'];
-            $columnName = $request->input("columns.$columnIndex.name");
-            $columnDirection = $order[0]['dir'];
-
-            $query->orderBy($columnName, $columnDirection);
-        }
-
-        // Paginate the results
         $services = $query->skip($start)->take($length)->get();
-
-        $totalRecords = Service::count();
+        $totalRecords = $this->getServiceCountAction->execute();
 
         return response()->json([
             'draw' => $draw,
@@ -75,6 +58,31 @@ class ServiceController extends Controller
             'recordsFiltered' => $totalRecords,
             'data' => $services,
         ]);
+    }
+
+    private function applySearchConditions($query, $search)
+    {
+        if (!empty($search['value'])) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search['value'] . '%')
+                    ->orWhere('services.id', 'like', '%' . $search['value'] . '%')
+                    ->orWhere('description', 'like', '%' . $search['value'] . '%')
+                    ->orWhere('services.created_at', 'like', '%' . $search['value'] . '%')
+                    ->orWhere('service_types.name', 'like', '%' . $search['value'] . '%')
+                    ->orWhere('clients.name', 'like', '%' . $search['value'] . '%');
+            });
+        }
+    }
+
+    private function applyOrdering($query, $order, $request)
+    {
+        if (!empty($order) && count($order) > 0) {
+            $columnIndex = $order[0]['column'];
+            $columnName = $request->input("columns.$columnIndex.name");
+            $columnDirection = $order[0]['dir'];
+
+            $query->orderBy($columnName, $columnDirection);
+        }
     }
 
     /**
