@@ -93,22 +93,27 @@ class ServiceRequestController extends Controller
         Request $request,
         UpdateServiceRequestStatusAction $updateServiceRequestStatusAction
     ): JsonResponse {
-        $response = $updateServiceRequestStatusAction->execute($id, $request->status);
-        return response()->json($response);
+        $updateServiceRequestStatusAction->execute($id, $request->status);
+        return response()->json($this->responseMsg('Status was successfully '.$request->status, 'success'));
     }
 
     /**
      * @param string $id
      * @param DeleteServiceRequestAction $deleteServiceRequestAction
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function destroy(string $id, DeleteServiceRequestAction $deleteServiceRequestAction): RedirectResponse
+    public function destroy(string $id, DeleteServiceRequestAction $deleteServiceRequestAction): JsonResponse
     {
-        $response = $deleteServiceRequestAction->execute($id);
-        if ($response) {
-            return redirect()->back()->with('success', 'Request was successfully deleted.');
-        }
-        return redirect()->back()->with('error', 'Request was not successfully deleted. Please try again.');
+         $deleteServiceRequestAction->execute($id);
+        return response()->json($this->responseMsg('Request was successfully deleted.', 'success'));
+    }
+
+    private function responseMsg($msg, $status): array
+    {
+        return [
+            'message' => $msg,
+            'status' => $status,
+        ];
     }
 }

@@ -24,6 +24,16 @@ $(document).ready(function() {
         $('#deleteConfirmationModal').modal('show');
     });
 
+    $(document).on('click', '.confirm-delete', function(e) {
+        e.preventDefault();
+        window.axios.delete(route).then((response) => {
+            triggerToaster(response.data.message);
+
+            $('#deleteConfirmationModal').modal('hide');
+            dataTable.ajax.reload();
+        });
+    });
+
     $(document).on('click', '#add_service', function(e) {
         e.preventDefault();
         serviceRoute = $(this).attr('data-href');

@@ -11,37 +11,11 @@
     </div>
 </div>
 
-@include('pages.admin.services.modals.delete-confirmation')
-
 @push('scripts')
     <script src="{{ asset('assets/plugins/validation/jquery.validate.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
-            function triggerToaster(msg) {
-                toastr.success(msg,
-                    "Success",
-                    {
-                        timeOut:5e3,
-                        closeButton:!0,
-                        debug:!1,
-                        newestOnTop:!0,
-                        progressBar:!0,
-                        positionClass:"toast-top-right",
-                        preventDuplicates:!0,
-                        onclick:null,
-                        showDuration:"300",
-                        hideDuration:"1000",
-                        extendedTimeOut:"1000",
-                        showEasing:"swing",
-                        hideEasing:"linear",
-                        showMethod:"fadeIn",
-                        hideMethod:"fadeOut",
-                        tapToDismiss:!1
-                    }
-                )
-            }
-
             var dataTable = $('#service_request_tbl').DataTable({
                 processing: true,
                 serverSide: true,
@@ -147,8 +121,21 @@
                 route = $(this).attr('data-href');
 
                 $('#deleteConfirmationModal form').attr('action', route);
-
                 $('#deleteConfirmationModal').modal('show');
+            });
+
+            $(document).on('click', '.confirm-delete', function(e) {
+                e.preventDefault();
+                window.axios.delete(route).then((response) => {
+                    triggerToaster(response.data.message);
+
+                    $('#deleteConfirmationModal').modal('hide');
+                    dataTable.ajax.reload();
+                })
+                .catch((error) => {
+                    triggerToaster('Oops! Something went wrong.');
+                    console.error(error);
+                });
             });
 
             $(document).on('click', '#update_request_status', function(e) {
@@ -162,12 +149,17 @@
             function updateStatus(route, status) {
                 window.axios.post(route, {'status': status})
                 .then((response) => {
-                    triggerToaster('Status was successfully updated.');
+                    if (response.data.status === 'error') {
+                        triggerErrorToaster(response.data.message);
+                    } else {
+                        triggerToaster(response.data.message);
+                    }
 
                     dataTable.ajax.reload();
                 })
                 .catch((error) => {
-                    // console.error(error);
+                    triggerToaster('Oops! Something went wrong.');
+                    console.error(error);
                 });
             }
         });

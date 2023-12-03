@@ -141,14 +141,14 @@ class ServiceController extends Controller
      * @param string $id
      * @param DeleteServiceAction $deleteServiceAction
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function destroy(string $id, DeleteServiceAction $deleteServiceAction): RedirectResponse
+    public function destroy(string $id, DeleteServiceAction $deleteServiceAction): JsonResponse
     {
         $response = $deleteServiceAction->execute($id);
         if ($response) {
-            return redirect()->back()->with('success', 'Service successfully deleted.');
+            return response()->json(['message' => 'Service was successfully deleted.']);
         }
-        return redirect()->back()->with('error', 'Service not successfully deleted. Please try again.');
+        return response()->json(['message' => 'Service not successfully deleted. Please try again.']);
     }
 }
