@@ -42,6 +42,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('event', \App\Http\Controllers\EventController::class)->except([
         'create', 'edit', 'show', 'update'
     ]);
-    // Route::post('event/all', [\App\Http\Controllers\ServiceRequestController::class, 'getAllEvents'])->name('event.all');
+    Route::post('event/{id}/update_event', [\App\Http\Controllers\EventController::class, 'updateStatus'])->name('event.update_event');
+    Route::post('event/all', [\App\Http\Controllers\EventController::class, 'getAllEvents'])->name('event.all');
 
 });

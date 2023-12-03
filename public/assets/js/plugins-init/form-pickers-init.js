@@ -32,7 +32,7 @@
     }).find('input').change(function() {
         console.log(this.value);
     });
-    
+
     $('#check-minutes').click(function(e) {
         // Have to stop propagation here
         e.stopPropagation();

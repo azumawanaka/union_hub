@@ -20,7 +20,7 @@
                     <i class="icon-note menu-icon"></i><span class="nav-text">Events</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="">Lists</a></li>
+                    <li><a href="{{ route('event.index') }}">Lists</a></li>
                     <li><a href="">Participants</a></li>
                 </ul>
             </li>

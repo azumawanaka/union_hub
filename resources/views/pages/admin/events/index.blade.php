@@ -1,7 +1,7 @@
-@extends('layouts.service')
+@extends('layouts.event')
 
 @section('content')
 
-    @include('pages.admin.services.tables.lists')
+    @include('pages.admin.events.tables.lists')
 
 @endsection

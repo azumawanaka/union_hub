@@ -11,7 +11,6 @@ use App\Actions\StoreServiceAction;
 use App\Actions\UpdateServiceAction;
 use App\Http\Requests\ServiceRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -36,6 +35,7 @@ class ServiceController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function getAllServices(Request $request): JsonResponse
