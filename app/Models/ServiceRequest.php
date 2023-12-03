@@ -11,6 +11,12 @@ class ServiceRequest extends Model
 {
     use Notifiable, HasFactory;
 
+    public const STATUSES = [
+        'pending' => 'Pending',
+        'rejected' => 'Rejected',
+        'approved' => 'Approved',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *

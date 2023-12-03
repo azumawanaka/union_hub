@@ -18,7 +18,31 @@
 
     <script>
         $(document).ready(function() {
-            $('#service_request_tbl').DataTable({
+            function triggerToaster(msg) {
+                toastr.success(msg,
+                    "Success",
+                    {
+                        timeOut:5e3,
+                        closeButton:!0,
+                        debug:!1,
+                        newestOnTop:!0,
+                        progressBar:!0,
+                        positionClass:"toast-top-right",
+                        preventDuplicates:!0,
+                        onclick:null,
+                        showDuration:"300",
+                        hideDuration:"1000",
+                        extendedTimeOut:"1000",
+                        showEasing:"swing",
+                        hideEasing:"linear",
+                        showMethod:"fadeIn",
+                        hideMethod:"fadeOut",
+                        tapToDismiss:!1
+                    }
+                )
+            }
+
+            var dataTable = $('#service_request_tbl').DataTable({
                 processing: true,
                 serverSide: true,
                 paging: true,
@@ -42,30 +66,110 @@
                     { data: 'preferred_time', name: 'preferred_time', title: 'Preferred Time' },
                     { data: 'location', name: 'location', title: 'Location' },
                     { data: 'u_name', name: 'users.first_name', title: 'User' },
-                    { data: 'sr_status', name: 'service_requests.status', title: 'Status' },
+                    {
+                        data: 'sr_status',
+                        name: 'service_requests.status',
+                        title: 'Status',
+                        render: function (data, type, row) {
+                            // Assuming data.sr_status contains the status value
+
+                            // Add HTML tags based on the status value
+                            let statusHTML = '';
+                            switch (data) {
+                                case 'pending':
+                                    statusHTML = '<span class="badge bg-warning text-white">Pending</span>';
+                                    break;
+                                case 'approved':
+                                    statusHTML = '<span class="badge bg-success text-white">Approved</span>';
+                                    break;
+                                case 'rejected':
+                                    statusHTML = '<span class="badge bg-danger text-white">Rejected</span>';
+                                    break;
+                                // Add more cases for other statuses
+
+                                default:
+                                    statusHTML = data; // Display raw status value if not matched
+                            }
+
+                            return statusHTML;
+                        }
+                    },
+                    // { data: 'sr_status', name: 'service_requests.status', title: 'Status' },
                     { data: 'details', name: 'details', title: 'Details' },
-                    { data: 'sr_created_at', name: 'service_requests.created_at', title: 'Created At' },
-                    // {
-                    //     data: null,
-                    //     title: 'Actions',
-                    //     render: function (data, type, row) {
-                    //         return '<button id="delete_service" class="btn btn-xs btn-danger mr-1" data-href="' +
-                    //             '{{ route("service_request.destroy", ":id") }}"'.replace(':id', data.sr_id) +
-                    //             '">Delete</button>';
-                    //     }
-                    // }
+                    { data: 'sr_created_at', name: 'service_requests.created_at', title: 'Created At', width: "100px" },
+                    {
+                        data: null,
+                        title: 'Actions',
+                        render: function (data, type, row) {
+                            const dropDown = '<div class="dropdown">'+
+                                '<button class="btn btn-info dropdown-toggle btn-xs text-white"'+
+                                    'type="button"'+
+                                    'id="service_request_action"'+
+                                    'data-bs-toggle="dropdown"'+
+                                    'aria-expanded="false">'+
+                                    '<i class="fa fa-cog"></i>'+
+                                '</button>'+
+                                '<ul class="dropdown-menu py-0" aria-labelledby="service_request_action">'+
+                                    '<li>'+
+                                        '<a href="javascript:;" id="update_request_status" data-status="approved"'+
+                                            'type="button" class="d-block p-2 text-info" data-href="' +
+                                            '{{ route("service_request.update_status", ":id") }}"'.replace(':id', data.sr_id) +
+                                            '"><i class="fa fa-thumbs-up"></i> Approve'+
+                                        '</a>'+
+                                    '</li>'+
+                                    '<li>'+
+                                        '<a href="javascript:;" id="update_request_status" data-status="rejected"'+
+                                            'type="button" class="d-block p-2 text-danger" data-href="' +
+                                            '{{ route("service_request.update_status", ":id") }}"'.replace(':id', data.sr_id) +
+                                            '"><i class="fa fa-thumbs-up"></i> Reject'+
+                                        '</a>'+
+                                    '</li>'+
+                                '</ul>'+
+                            '</div>';
+
+                            const deleteBtn = '<button id="delete_request" class="btn btn-xs btn-danger ml-1" data-href="' +
+                                '{{ route("service_request.destroy", ":id") }}"'.replace(':id', data.sr_id) +
+                                '">Delete</button>';
+
+                            if (data.sr_status === 'rejected' || data.sr_status === 'approved') {
+                                return `<div class="d-flex"> ${ deleteBtn } </div>`;
+                            } else {
+                                return `<div class="d-flex"> ${  dropDown + deleteBtn }</div>`;
+                            }
+                        }
+                    }
                 ]
             });
 
-            let serviceRoute = ''
-            $(document).on('click', '#delete_service', function(e) {
+            let route = ''
+            $(document).on('click', '#delete_request', function(e) {
                 e.preventDefault();
-                serviceRoute = $(this).attr('data-href');
+                route = $(this).attr('data-href');
 
-                $('#deleteConfirmationModal form').attr('action', serviceRoute);
+                $('#deleteConfirmationModal form').attr('action', route);
 
                 $('#deleteConfirmationModal').modal('show');
             });
+
+            $(document).on('click', '#update_request_status', function(e) {
+                e.preventDefault();
+                const status = $(this).attr('data-status');
+                route = $(this).attr('data-href');
+
+                updateStatus(route, status);
+            });
+
+            function updateStatus(route, status) {
+                window.axios.post(route, {'status': status})
+                .then((response) => {
+                    triggerToaster('Status was successfully updated.');
+
+                    dataTable.ajax.reload();
+                })
+                .catch((error) => {
+                    // console.error(error);
+                });
+            }
         });
     </script>
 

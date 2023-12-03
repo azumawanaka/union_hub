@@ -20,6 +20,8 @@
 
     <link href="{{ asset('assets/plugins/tables/css/datatable/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/theme.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('assets/plugins/toastr/css/toastr.min.css') }}" rel="stylesheet">
 </head>
 <body class="h-100">
 
@@ -63,6 +65,10 @@
     <script src="{{ asset('assets/plugins/tables/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/tables/js/datatable/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/tables/js/datatable-init/datatable-basic.min.js') }}"></script>
+
+    <!-- Toastr -->
+    <script src="{{ asset('assets/plugins/toastr/js/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/toastr/js/toastr.init.js') }}"></script>
 
     @stack('scripts')
 </body>

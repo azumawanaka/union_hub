@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ServiceRequest;
+use App\Actions\DeleteServiceRequestAction;
+use App\Actions\GetServiceRequestCountAction;
+use App\Actions\SelectServiceRequestAction;
+use App\Actions\UpdateServiceRequestStatusAction;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ServiceRequestController extends Controller
@@ -20,34 +24,24 @@ class ServiceRequestController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function getAllServiceRequests(Request $request): JsonResponse
-    {
+    public function getAllServiceRequests(
+        Request $request,
+        SelectServiceRequestAction $selectServiceRequestAction,
+        GetServiceRequestCountAction $getServiceRequestCountAction
+    ): JsonResponse {
         $draw = $request->input('draw');
         $start = $request->input('start');
         $length = $request->input('length');
         $order = $request->input('order');
         $search = $request->input('search');
 
-        $query = ServiceRequest::select(
-            'service_requests.id as sr_id',
-            'services.title as s_name',
-            'budget',
-            'preferred_date',
-            'preferred_time',
-            'location',
-            'users.first_name as u_name',
-            'service_requests.status as sr_status',
-            'details',
-            'service_requests.created_at as sr_created_at'
-        )
-        ->leftJoin('services', 'service_requests.service_id', '=', 'services.id')
-        ->leftJoin('users','service_requests.user_id', '=', 'users.id');
+        $query = $selectServiceRequestAction->execute();
 
         $this->applySearchConditions($query, $search);
         $this->applyOrdering($query, $order, $request);
 
         $serviceRequests = $query->skip($start)->take($length)->get();
-        $totalRecords = ServiceRequest::count();
+        $totalRecords = $getServiceRequestCountAction->execute();
 
         return response()->json([
             'draw' => $draw,
@@ -87,28 +81,34 @@ class ServiceRequestController extends Controller
         }
     }
 
-
     /**
-     * Store a newly created resource in storage.
+     * @param string $id
+     * @param Request $request
+     * @param UpdateServiceRequestStatusAction $updateServiceRequestStatusAction
+     *
+     * @return JsonResponse
      */
-    public function store(Request $request)
-    {
-        //
+    public function updateStatus(
+        string $id,
+        Request $request,
+        UpdateServiceRequestStatusAction $updateServiceRequestStatusAction
+    ): JsonResponse {
+        $response = $updateServiceRequestStatusAction->execute($id, $request->status);
+        return response()->json($response);
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param string $id
+     * @param DeleteServiceRequestAction $deleteServiceRequestAction
+     *
+     * @return RedirectResponse
      */
-    public function update(Request $request, string $id)
+    public function destroy(string $id, DeleteServiceRequestAction $deleteServiceRequestAction): RedirectResponse
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $response = $deleteServiceRequestAction->execute($id);
+        if ($response) {
+            return redirect()->back()->with('success', 'Request was successfully deleted.');
+        }
+        return redirect()->back()->with('error', 'Request was not successfully deleted. Please try again.');
     }
 }

@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes();
 
-// Client Controller
 Route::get('client/search', [\App\Http\Controllers\ClientController::class, 'search'])->name('client.search');
 
 Route::middleware(['auth', 'user'])->group(function () {
@@ -36,6 +35,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('service_request', \App\Http\Controllers\ServiceRequestController::class)->except([
         'create', 'edit', 'show', 'update'
     ]);
+    Route::post('service_request/{id}/update_status', [\App\Http\Controllers\ServiceRequestController::class, 'updateStatus'])->name('service_request.update_status');
     Route::post('service_request/all', [\App\Http\Controllers\ServiceRequestController::class, 'getAllServiceRequests'])->name('service_request.all');
+
+    // Event Controller
+    Route::resource('event', \App\Http\Controllers\EventController::class)->except([
+        'create', 'edit', 'show', 'update'
+    ]);
+    // Route::post('event/all', [\App\Http\Controllers\ServiceRequestController::class, 'getAllEvents'])->name('event.all');
 
 });

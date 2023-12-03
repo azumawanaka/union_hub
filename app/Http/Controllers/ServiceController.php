@@ -11,6 +11,7 @@ use App\Actions\StoreServiceAction;
 use App\Actions\UpdateServiceAction;
 use App\Http\Requests\ServiceRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -140,15 +141,14 @@ class ServiceController extends Controller
      * @param string $id
      * @param DeleteServiceAction $deleteServiceAction
      *
-     * @return mixed
+     * @return RedirectResponse
      */
-    public function destroy(string $id, DeleteServiceAction $deleteServiceAction)
+    public function destroy(string $id, DeleteServiceAction $deleteServiceAction): RedirectResponse
     {
         $response = $deleteServiceAction->execute($id);
         if ($response) {
             return redirect()->back()->with('success', 'Service successfully deleted.');
         }
-
         return redirect()->back()->with('error', 'Service not successfully deleted. Please try again.');
     }
 }
