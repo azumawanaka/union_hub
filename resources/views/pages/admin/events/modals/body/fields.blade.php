@@ -5,7 +5,7 @@
             <label class="col-lg-12 col-form-label" for="name">Name <span class="text-danger">*</span>
             </label>
             <div class="col-lg-12">
-                <input type="text" class="form-control" id="name" name="name" placeholder="Enter a service name..">
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter a event name..">
             </div>
         </div>
         <div class="form-group row">
@@ -19,10 +19,10 @@
             </label>
             <div class="col-lg-12">
                 <input type="text"
-                    id="event_date_range"
+                    id="start_end_date"
                     class="form-control"
                     name="start_end_date"
-                    value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM">
+                    value="">
             </div>
         </div>
         <div class="form-group row">
@@ -49,3 +49,28 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('#start_end_date').daterangepicker({
+                timePicker: true,
+                format: 'MM/DD/YYYY HH:mm',
+                timePickerIncrement: 30,
+                timePicker24Hour: true,
+                timePickerSeconds: false,
+                buttonClasses: ['btn', 'btn-sm'],
+                applyClass: 'btn-danger',
+                cancelClass: 'btn-inverse'
+            });
+
+            // Set the initial date range
+            $('#start_end_date').on('apply.daterangepicker', function(ev, picker) {
+                const start_date = picker.startDate.format('YYYY-MM-DD HH:mm');
+                const end_date = picker.endDate.format('YYYY-MM-DD HH:mm');
+
+                $('#start_end_date').val(start_date +' - '+ end_date);
+            });
+        });
+    </script>
+@endpush

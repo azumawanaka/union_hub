@@ -18,13 +18,10 @@ class Event extends Model
     ];
 
     public const STATUSES = [
-        'empty',
         'full',
-        'not_yet_started',
         'ongoing',
         'cancelled',
         'finished',
-        'max_participants',
     ];
 
     /**

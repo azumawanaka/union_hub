@@ -91,7 +91,6 @@
     <script src="{{ asset('assets/plugins/toastr/js/toastr.init.js') }}"></script>
 
     <script>
-        $('#event_color_picker').asColorPicker();
         function triggerToaster(msg) {
             toastr.success(msg,
                 "Success",

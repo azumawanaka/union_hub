@@ -25,24 +25,13 @@
 
     <script>
         $(document).ready(function() {
-            $('#event_date_range').daterangepicker({
-                timePicker: true,
-                format: 'MM/DD/YYYY h:mm A',
-                timePickerIncrement: 30,
-                timePicker12Hour: true,
-                timePickerSeconds: false,
-                buttonClasses: ['btn', 'btn-sm'],
-                applyClass: 'btn-danger',
-                cancelClass: 'btn-inverse'
-            });
-
             const dataTable = $('#event_tbl').DataTable({
                 processing: true,
                 serverSide: true,
                 paging: true,
                 searching: true,
                 ordering: true,
-                order: [[0, 'asc']],
+                order: [[0, 'desc']],
                 lengthMenu: [10, 25, 50, 100],
                 pageLength: 10,
                 ajax: {
@@ -55,11 +44,45 @@
                 columns: [
                     { data: 'event_id', name: 'id', title: 'ID', width: '50px' },
                     { data: 'name', name: 'name', title: 'Name', width: '150px' },
+                    {
+                        data: 'category',
+                        name: 'category',
+                        title: 'Category',
+                        render: function (data, type, row) {
+                            return `<span class="badge badge-${data === 'cultural' ? 'info' : 'success text-white'}">${ data }</span>`;
+                        },
+                        width: '80px'
+                    },
                     { data: 'description', name: 'description', title: 'Description', width: '250px' },
                     { data: 'start_date', name: 'start_date', title: 'Start Date', width: '120px' },
                     { data: 'end_date', name: 'end_date', title: 'End Date', width: '120px' },
-                    { data: 'category', name: 'category', title: 'Category', width: '80px' },
-                    { data: 'status', name: 'status', title: 'Status', width: '60px' },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        title: 'Status',
+                        render: function (data, type, row) {
+                            let badgeColor = 'warning';
+                            switch (data) {
+                                case 'cancelled':
+                                    badgeColor = 'danger';
+                                    break;
+                                case 'ongoing':
+                                    badgeColor = 'secondary text-white';
+                                    break;
+                                case 'finished':
+                                    badgeColor = 'success text-white';
+                                    break;
+                                case 'full':
+                                    badgeColor = 'info';
+                                    break;
+                                default:
+                                    badgeColor = 'dark';
+                                    break;
+                            }
+                            return `<span class="badge badge-${badgeColor}">${ data }</span>`;
+                        },
+                        width: '60px'
+                    },
                     {
                         data: null,
                         title: 'Actions',
