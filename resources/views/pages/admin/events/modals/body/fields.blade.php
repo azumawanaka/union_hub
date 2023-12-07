@@ -11,7 +11,7 @@
         <div class="form-group row">
             <label class="col-lg-12 col-form-label" for="description">Description <span class="text-danger">*</span></label>
             <div class="col-lg-12">
-                <textarea class="form-control" id="descriptions" name="description" rows="5" placeholder="Write description here..."></textarea>
+                <textarea class="form-control" id="description" name="description" rows="5" placeholder="Write description here..."></textarea>
             </div>
         </div>
         <div class="form-group row">
@@ -45,6 +45,18 @@
             </label>
             <div class="col-lg-12">
                 <input type="number" min="1" class="form-control" id="max_participants" name="max_participants" value="10">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-lg-12 col-form-label" for="status">
+                Status
+            </label>
+            <div class="col-lg-12">
+                @foreach(\App\Models\Event::STATUSES as $status)
+                    <label class="radio-inline mr-3">
+                        <input type="radio" name="status" value="{{ $status }}"> {{ ucfirst($status) }}
+                    </label>
+                @endforeach
             </div>
         </div>
     </div>

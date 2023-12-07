@@ -51,6 +51,7 @@
                     {
                         data: null,
                         title: 'Actions',
+                        orderable: false,
                         render: function (data, type, row) {
                             var editButton = '<button id="edit_service" class="btn btn-xs btn-primary mr-1" data-href="' +
                                 '{{ route("service.update_service", ":id") }}"'.replace(':id', data.s_id) +

@@ -56,6 +56,7 @@
                     { data: 'description', name: 'description', title: 'Description', width: '250px' },
                     { data: 'start_date', name: 'start_date', title: 'Start Date', width: '120px' },
                     { data: 'end_date', name: 'end_date', title: 'End Date', width: '120px' },
+                    { data: 'participant_count', name: 'participant_count', title: 'No. of participants', width: '120px' },
                     {
                         data: 'status',
                         name: 'status',
@@ -86,28 +87,34 @@
                     {
                         data: null,
                         title: 'Actions',
+                        orderable: false,
                         render: function (data, type, row) {
                             var editButton = '<button id="edit_event" class="btn btn-xs btn-primary mr-1" data-href="' +
                                 '{{ route("event.update_event", ":id") }}"'.replace(':id', data.event_id) +
+                                '" data-get="' +
+                                '{{ route("event.show", ":id") }}"'.replace(':id', data.event_id) +
                                 '">Edit</button>';
                             var deleteButton = '<button id="delete_event" class="btn btn-xs btn-danger mr-1" data-href="' +
                                 '{{ route("event.destroy", ":id") }}"'.replace(':id', data.event_id) +
                                 '">Delete</button>';
                             return editButton + deleteButton;
                         },
-                        width: '50px'
+                        width: '90px'
                     }
                 ]
             });
 
             $(document).on('click', '#edit_event', function () {
                 var editUrl = $(this).data('href');
-                var serviceUrl = $(this).data('get');
+                var eventUrl = $(this).data('get');
+
+                $('#eventModal form').attr('action', editUrl);
 
                 emptyFields();
 
-                const form = $('#eventModal form')
-                    form.attr('action', editUrl);
+                window.axios.get(eventUrl).then((response) => {
+                    setUpFields(response.data);
+                });
 
                 $('#eventModal').modal('show');
             });
@@ -146,10 +153,13 @@
 
             function emptyFields() {
                 const emptyPayload = {
-                    'title': '',
-                    'service_type_id': '',
-                    'client_id': '',
+                    'name': '',
                     'description': '',
+                    'category': '',
+                    'start_date': '01/01/2023 01:00',
+                    'end_date': '01/02/2023 02:00',
+                    'max_participants': 10,
+                    'status': '',
                 };
                 setUpFields(emptyPayload);
             }
@@ -157,9 +167,29 @@
             function setUpFields(v) {
                 const form = $('#eventModal form')
 
-                form.find('#name').val(v.title).focus();
+                form.find('#name').val(v.name).focus();
+                form.find('#description').val(v.description);
+                form.find('#category').val(v.category);
+                form.find('#max_participants').val(v.max_participants);
 
-                form.find('#descriptions').val(v.description);
+                $(`input[name="status"][value="${v.status}"]`).prop('checked', true);
+
+                setupDanteRangePicker(v, form);
+            }
+
+            function setupDanteRangePicker(v, form) {
+                // Set the date range for the edit form
+                const startDate = moment(v.start_date, 'YYYY-MM-DD HH:mm');
+                const endDate = moment(v.end_date, 'YYYY-MM-DD HH:mm');
+
+                // Get the daterangepicker instance
+                const daterangepicker = $('#start_end_date').data('daterangepicker');
+
+                // Set the start and end date for the daterangepicker
+                daterangepicker.setStartDate(startDate);
+                daterangepicker.setEndDate(endDate);
+
+                form.find('#start_end_date').val(v.start_date +" - " + v.end_date);
             }
 
             $(document).on('click', '.close-modal', function () {

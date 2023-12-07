@@ -74,6 +74,7 @@
                     {
                         data: null,
                         title: 'Actions',
+                        orderable: false,
                         render: function (data, type, row) {
                             const dropDown = '<div class="dropdown">'+
                                 '<button class="btn btn-info dropdown-toggle btn-xs text-white"'+

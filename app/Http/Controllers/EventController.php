@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\DeleteEventAction;
+use App\Actions\GetEventAction;
 use App\Actions\GetEventCountAction;
 use App\Actions\SelectEventAction;
 use App\Actions\StoreEventAction;
+use App\Actions\UpdateEventAction;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -111,6 +114,36 @@ class EventController extends Controller
         return redirect()->back()->with($key, $msg);
     }
 
+    public function updateEvent(string $id, Request $request, UpdateEventAction $updateEventAction)
+    {
+        $dateRange = $request->input('start_end_date');
+        $splitDates = explode(' - ', $dateRange);
+        $startDate = $this->convertDateTimeFormat(trim($splitDates[0]));
+        $endDate = $this->convertDateTimeFormat(trim($splitDates[1]));
+        $data = [
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'category' => $request->input('category'),
+            'max_participants' => $request->input('max_participants'),
+            'color' => $this->generateRandomColor(),
+            'status' => $request->input('status'),
+        ];
+
+        try {
+            $updateEventAction->execute($id, $data);
+
+            $key = 'info';
+            $msg = 'Event was successfully updated.';
+        } catch (\Throwable $th) {
+            $key = 'error';
+            $msg = 'Exception thrown during update event: ' . $th->getMessage();
+        }
+
+        return redirect()->back()->with($key, $msg);
+    }
+
     private function convertDateTimeFormat($dateTime)
     {
         return Carbon::parse($dateTime)->format('Y-m-d H:i');
@@ -131,22 +164,28 @@ class EventController extends Controller
 
     /**
      * @param string $id
-     * @param Request $request
+     * @param GetEventAction $getEventAction
      *
      * @return JsonResponse
      */
-    public function updateStatus(
-        string $id,
-        Request $request
-    ): JsonResponse {
-        return response()->json($this->responseMsg('Status was successfully', 'success'));
+    public function show(string $id, GetEventAction $getEventAction): JsonResponse
+    {
+        $data = $getEventAction->execute($id);
+        return response()->json($data);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param string $id
+     * @param DeleteEventAction $deleteEventAction
+     *
+     * @return JsonResponse
      */
-    public function destroy(string $id)
+    public function destroy(string $id, DeleteEventAction $deleteEventAction): JsonResponse
     {
-        //
+        $response = $deleteEventAction->execute($id);
+        if ($response) {
+            return response()->json(['message' => 'Event was successfully deleted.']);
+        }
+        return response()->json(['message' => 'Event not successfully deleted. Please try again.']);
     }
 }

@@ -16,6 +16,7 @@ class SelectEventAction
     public function execute()
     {
         return $this->model->newQuery()
+            ->with('eventParticipants')
             ->select(
                 'id as event_id',
                 'name',
@@ -24,6 +25,7 @@ class SelectEventAction
                 'end_date',
                 'category',
                 'status',
+                \DB::raw('(SELECT COUNT(*) FROM event_participants WHERE event_participants.event_id = events.id) as participant_count'),
             );
     }
 }

@@ -18,9 +18,9 @@ class Event extends Model
     ];
 
     public const STATUSES = [
-        'full',
         'ongoing',
         'cancelled',
+        'full',
         'finished',
     ];
 
@@ -37,6 +37,7 @@ class Event extends Model
         'category',
         'status',
         'color',
+        'max_participant',
     ];
 
     public function eventParticipants(): HasMany

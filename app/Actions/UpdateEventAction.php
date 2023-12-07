@@ -4,7 +4,7 @@ namespace App\Actions;
 
 use App\Models\Event;
 
-class StoreEventAction
+class UpdateEventAction
 {
     protected $model;
 
@@ -13,16 +13,16 @@ class StoreEventAction
         $this->model = $model;
     }
 
-    public function execute($data)
+    public function execute($id, $data)
     {
-        return $this->model->create([
+        return $this->model->newQuery()->find($id)->update([
             'name' => $data['name'],
             'description' => $data['description'],
             'start_date' => $data['start_date'],
             'end_date' => $data['end_date'],
             'category' => $data['category'],
             'max_participants' => $data['max_participants'],
-            'color' => $data['color'],
+            'status' => $data['status'],
         ]);
     }
 }
