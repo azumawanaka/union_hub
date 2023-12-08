@@ -88,14 +88,14 @@
                                     '<li>'+
                                         '<a href="javascript:;" id="update_request_status" data-status="approved"'+
                                             'type="button" class="d-block p-2 text-info" data-href="' +
-                                            '{{ route("service_request.update_status", ":id") }}"'.replace(':id', data.sr_id) +
+                                            '{{ route("service_requests.update_status", ":id") }}"'.replace(':id', data.sr_id) +
                                             '"><i class="fa fa-thumbs-up"></i> Approve'+
                                         '</a>'+
                                     '</li>'+
                                     '<li>'+
                                         '<a href="javascript:;" id="update_request_status" data-status="rejected"'+
                                             'type="button" class="d-block p-2 text-danger" data-href="' +
-                                            '{{ route("service_request.update_status", ":id") }}"'.replace(':id', data.sr_id) +
+                                            '{{ route("service_requests.update_status", ":id") }}"'.replace(':id', data.sr_id) +
                                             '"><i class="fa fa-thumbs-up"></i> Reject'+
                                         '</a>'+
                                     '</li>'+
@@ -103,7 +103,7 @@
                             '</div>';
 
                             const deleteBtn = '<button id="delete_request" class="btn btn-xs btn-danger ml-1" data-href="' +
-                                '{{ route("service_request.destroy", ":id") }}"'.replace(':id', data.sr_id) +
+                                '{{ route("service_requests.destroy", ":id") }}"'.replace(':id', data.sr_id) +
                                 '">Delete</button>';
 
                             if (data.sr_status === 'rejected' || data.sr_status === 'approved') {

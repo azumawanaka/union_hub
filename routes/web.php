@@ -24,24 +24,24 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     // Service Controller
-    Route::resource('service', \App\Http\Controllers\ServiceController::class)->except([
+    Route::resource('services', \App\Http\Controllers\ServiceController::class)->except([
         'create', 'edit', 'show', 'update'
     ]);
-    Route::get('service/{id}/get_service', [\App\Http\Controllers\ServiceController::class, 'getServiceById'])->name('service.info');
-    Route::post('service/all', [\App\Http\Controllers\ServiceController::class, 'getAllServices'])->name('service.all');
-    Route::post('service/{id}/update_service', [\App\Http\Controllers\ServiceController::class, 'updateService'])->name('service.update_service');
+    Route::get('services/{id}/get_service', [\App\Http\Controllers\ServiceController::class, 'getServiceById'])->name('services.info');
+    Route::post('services/all', [\App\Http\Controllers\ServiceController::class, 'getAllServices'])->name('services.all');
+    Route::post('services/{id}/update_service', [\App\Http\Controllers\ServiceController::class, 'updateService'])->name('services.update_service');
 
     // Service Request Controller
-    Route::resource('service_request', \App\Http\Controllers\ServiceRequestController::class)->except([
+    Route::resource('service_requests', \App\Http\Controllers\ServiceRequestController::class)->except([
         'create', 'edit', 'show', 'update'
     ]);
-    Route::post('service_request/{id}/update_status', [\App\Http\Controllers\ServiceRequestController::class, 'updateStatus'])->name('service_request.update_status');
-    Route::post('service_request/all', [\App\Http\Controllers\ServiceRequestController::class, 'getAllServiceRequests'])->name('service_request.all');
+    Route::post('service_requests/{id}/update_status', [\App\Http\Controllers\ServiceRequestController::class, 'updateStatus'])->name('service_requests.update_status');
+    Route::post('service_requests/all', [\App\Http\Controllers\ServiceRequestController::class, 'getAllServiceRequests'])->name('service_requests.all');
 
     // Event Controller
-    Route::resource('event', \App\Http\Controllers\EventController::class)->except([
+    Route::resource('events', \App\Http\Controllers\EventController::class)->except([
         'create', 'edit', 'update'
     ]);
-    Route::post('event/{id}/update_event', [\App\Http\Controllers\EventController::class, 'updateEvent'])->name('event.update_event');
-    Route::post('event/all', [\App\Http\Controllers\EventController::class, 'getAllEvents'])->name('event.all');
+    Route::post('events/{id}/update_event', [\App\Http\Controllers\EventController::class, 'updateEvent'])->name('events.update_event');
+    Route::post('events/all', [\App\Http\Controllers\EventController::class, 'getAllEvents'])->name('events.all');
 });

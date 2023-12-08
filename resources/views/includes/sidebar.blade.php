@@ -11,8 +11,8 @@
                     <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Services</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{{ route('service.index') }}">Lists</a></li>
-                    <li><a href="{{ route('service_request.index') }}">Requests</a></li>
+                    <li><a href="{{ route('services.index') }}">Lists</a></li>
+                    <li><a href="{{ route('service_requests.index') }}">Requests</a></li>
                 </ul>
             </li>
             <li class="mega-menu mega-menu-sm">
@@ -20,7 +20,7 @@
                     <i class="icon-note menu-icon"></i><span class="nav-text">Events</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{{ route('event.index') }}">Lists</a></li>
+                    <li><a href="{{ route('events.index') }}">Lists</a></li>
                     <li><a href="">Participants</a></li>
                 </ul>
             </li>

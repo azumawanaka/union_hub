@@ -6,7 +6,7 @@
                 <button type="button"
                     id="add_service"
                     class="btn mb-1 btn-info btn-xs"
-                    data-href="{{ route('service.store') }}">
+                    data-href="{{ route('services.store') }}">
                     Add Service <span class="btn-icon-right"><i class="fa fa-plus"></i></span>
                 </button>
 
@@ -35,7 +35,7 @@
                 lengthMenu: [10, 25, 50, 100],
                 pageLength: 10,
                 ajax: {
-                    url: 'service/all',
+                    url: 'services/all',
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -54,12 +54,12 @@
                         orderable: false,
                         render: function (data, type, row) {
                             var editButton = '<button id="edit_service" class="btn btn-xs btn-primary mr-1" data-href="' +
-                                '{{ route("service.update_service", ":id") }}"'.replace(':id', data.s_id) +
+                                '{{ route("services.update_service", ":id") }}"'.replace(':id', data.s_id) +
                                 '" data-get="' +
-                                '{{ route("service.info", ":id") }}"'.replace(':id', data.s_id) +
+                                '{{ route("services.info", ":id") }}"'.replace(':id', data.s_id) +
                                 '">Edit</button>';
                             var deleteButton = '<button id="delete_service" class="btn btn-xs btn-danger mr-1" data-href="' +
-                                '{{ route("service.destroy", ":id") }}"'.replace(':id', data.s_id) +
+                                '{{ route("services.destroy", ":id") }}"'.replace(':id', data.s_id) +
                                 '">Delete</button>';
                             return editButton + deleteButton;
                         }

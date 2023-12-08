@@ -6,7 +6,7 @@
                 <button type="button"
                     id="add_event"
                     class="btn mb-1 btn-info btn-xs"
-                    data-href="{{ route('event.store') }}">
+                    data-href="{{ route('events.store') }}">
                     Add Event <span class="btn-icon-right"><i class="fa fa-plus"></i></span>
                 </button>
 
@@ -35,7 +35,7 @@
                 lengthMenu: [10, 25, 50, 100],
                 pageLength: 10,
                 ajax: {
-                    url: 'event/all',
+                    url: 'events/all',
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -90,12 +90,12 @@
                         orderable: false,
                         render: function (data, type, row) {
                             var editButton = '<button id="edit_event" class="btn btn-xs btn-primary mr-1" data-href="' +
-                                '{{ route("event.update_event", ":id") }}"'.replace(':id', data.event_id) +
+                                '{{ route("events.update_event", ":id") }}"'.replace(':id', data.event_id) +
                                 '" data-get="' +
-                                '{{ route("event.show", ":id") }}"'.replace(':id', data.event_id) +
+                                '{{ route("events.show", ":id") }}"'.replace(':id', data.event_id) +
                                 '">Edit</button>';
                             var deleteButton = '<button id="delete_event" class="btn btn-xs btn-danger mr-1" data-href="' +
-                                '{{ route("event.destroy", ":id") }}"'.replace(':id', data.event_id) +
+                                '{{ route("events.destroy", ":id") }}"'.replace(':id', data.event_id) +
                                 '">Delete</button>';
                             return editButton + deleteButton;
                         },
