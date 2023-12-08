@@ -44,4 +44,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     ]);
     Route::post('events/{id}/update_event', [\App\Http\Controllers\EventController::class, 'updateEvent'])->name('events.update_event');
     Route::post('events/all', [\App\Http\Controllers\EventController::class, 'getAllEvents'])->name('events.all');
+
+    // User Controller
+    Route::resource('users', \App\Http\Controllers\UserController::class)->except([
+        'create',
+    ]);
+    Route::get('users/{id}/get_user', [\App\Http\Controllers\ServiceController::class, 'getUserById'])->name('users.info');
+    Route::post('users/all', [\App\Http\Controllers\UserController::class, 'getAllUsers'])->name('users.all');
+    Route::post('users/{id}/update_user', [\App\Http\Controllers\UserController::class, 'updateUser'])->name('users.update_user');
 });
