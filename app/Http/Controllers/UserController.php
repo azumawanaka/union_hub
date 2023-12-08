@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\GetUserAction;
+use App\Actions\StoreUserAction;
+use App\Actions\UpdateUserAction;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -29,9 +34,10 @@ class UserController extends Controller
         $order = $request->input('order');
         $search = $request->input('search');
 
-        $query = User::select(
+        $query = User::where('id', '!=', auth()->user()->id)->select(
             'users.id as u_id',
-            \DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"),
+            'users.first_name as u_fn',
+            'users.last_name as u_ln',
             'users.email as u_email',
             'users.address as u_address',
             'users.mobile as u_mobile',
@@ -60,22 +66,28 @@ class UserController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('users.id', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.id', 'like', '%' . $search['value'] . '%')
+                    ->orWhere('users.first_name', 'like', '%' . $search['value'] . '%')
+                    ->orWhere('users.last_name', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.email', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.address', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.mobile', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.gender', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.role', 'like', '%' . $search['value'] . '%')
-                    ->orWhere('users.created_at', 'like', '%' . $search['value'] . '%')
-                    ->orWhere(function ($query) use ($search) {
-                        $query->where(\DB::raw("CONCAT(users.first_name, ' ', users.last_name)"), 'like', '%' . $search['value'] . '%');
-                    });
+                    ->orWhere('users.created_at', 'like', '%' . $search['value'] . '%');
             });
         }
     }
 
-    public function getUserById(string $id)
+    /**
+     * @param string $id
+     * @param GetUserAction $getUserAction
+     *
+     * @return JsonResponse
+     */
+    public function getUserById(string $id, GetUserAction $getUserAction): JsonResponse
     {
-        //
+        $data = $getUserAction->execute($id);
+        return response()->json($data);
     }
 
     private function applyOrdering($query, $order, $request)
@@ -90,20 +102,37 @@ class UserController extends Controller
     }
 
     /**
-     * @return mixed
+     * @param Request $request
+     * @param string $id
+     * @param UpdateUserAction $updateUserAction
+     *
+     * @return RedirectResponse
      */
-    public function updateUser(Request $request, string $id)
+    public function updateUser(Request $request, string $id, UpdateUserAction $updateUserAction): RedirectResponse
     {
-       //
+        try {
+            $updateUserAction->execute($id, $request->all());
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+        return redirect()->back()->with('success', 'User was successfully updated.');
     }
 
 
     /**
-     * Store a newly created resource in storage.
+     * @param Request $request
+     * @param StoreUserAction $storeUserAction
+     *
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request, StoreUserAction $storeUserAction): RedirectResponse
     {
-        //
+        try {
+            $storeUserAction->execute($request->all());
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+        return redirect()->back()->with('success', 'User was successfully added.');
     }
 
     /**

@@ -15,6 +15,9 @@
                 <div class="table-responsive">
                     <table id="user_tbl" class="table table-striped table-bordered"></table>
                 </div>
+
+                @include('pages.admin.users.modals.edit-user-modal')
+
             </div>
         </div>
     </div>
@@ -31,7 +34,7 @@
                 paging: true,
                 searching: true,
                 ordering: true,
-                order: [[5, 'desc']],
+                order: [[0, 'desc']],
                 lengthMenu: [10, 25, 50, 100],
                 pageLength: 10,
                 ajax: {
@@ -43,12 +46,21 @@
                 },
                 columns: [
                     { data: 'u_id', name: 'u_id', title: 'ID' },
-                    { data: 'full_name', name: 'full_name', title: 'Name' },
+                    { data: 'u_fn', name: 'u_fn', title: 'First Name' },
+                    { data: 'u_ln', name: 'u_ln', title: 'Last Name' },
                     { data: 'u_email', name: 'u_email', title: 'Email' },
                     { data: 'u_address', name: 'u_address', title: 'Address' },
                     { data: 'u_mobile', name: 'u_mobile', title: 'Mobile' },
                     { data: 'u_gender', name: 'u_gender', title: 'Gender' },
-                    { data: 'u_role', name: 'u_role', title: 'Role' },
+                    {
+                        data: 'u_role',
+                        name: 'u_role',
+                        title: 'Role',
+                        orderable: true,
+                        render: function (data, type, row) {
+                            return data == 0 ? 'user' : 'admin';
+                        }
+                    },
                     { data: 'u_created_at', name: 'u_created_at', title: 'Added At' },
                     {
                         data: null,
@@ -63,6 +75,7 @@
                             var deleteButton = '<button id="delete_user" class="btn btn-xs btn-danger mr-1" data-href="' +
                                 '{{ route("users.destroy", ":id") }}"'.replace(':id', data.u_id) +
                                 '">Delete</button>';
+
                             return editButton + deleteButton;
                         }
                     }
@@ -73,14 +86,14 @@
                 var editUrl = $(this).data('href');
                 var userUrl = $(this).data('get');
 
-                emptyFields();
+                emptyFields('#userEditModal');
 
-                const form = $('#userModal form')
+                const form = $('#userEditModal form')
                     form.attr('action', editUrl);
 
-                getuser(userUrl);
+                getuser(userUrl, '#userEditModal');
 
-                $('#userModal').modal('show');
+                $('#userEditModal').modal('show');
             });
 
 
@@ -110,42 +123,44 @@
 
                 $('#userModal form').attr('action', userRoute);
 
-                emptyFields();
+                emptyFields('#userModal');
 
                 $('#userModal').modal('show');
             });
 
-            function getuser(route) {
+            function getuser(route, id) {
                 window.axios.get(route)
                     .then(function(response) {
                         const userResponseData = response.data;
-                        setUpFields(userResponseData);
+                        setUpFields(userResponseData, id);
                     })
                     .catch(function(error) {
                         console.error('Error fetching data:', error);
                     });
             }
 
-            function emptyFields() {
+            function emptyFields(id) {
                 const emptyPayload = {
-                    'title': '',
-                    'user_type_id': '',
-                    'client_id': '',
-                    'description': '',
+                    'first_name': '',
+                    'last_name': '',
+                    'email': '',
+                    'address': '',
+                    'password': '',
+                    'mobile': '',
+                    'gender': '',
                 };
-                setUpFields(emptyPayload);
+                setUpFields(emptyPayload, id);
             }
 
-            function setUpFields(v) {
-                const form = $('#userModal form')
+            function setUpFields(v, id) {
+                const form = $(`${id} form`)
 
-                form.find('#name').val(v.title).focus();
-                form.find('#user_type_id').val(v.user_type_id);
-
-                form.find('#client_id').val(v.client_id);
-                $('#client_id').selectpicker('refresh');
-
-                form.find('#descriptions').val(v.description);
+                form.find('[name=first_name]').val(v.first_name).focus();
+                form.find('[name=last_name]').val(v.last_name).focus();
+                form.find('[name=email]').val(v.email).focus();
+                form.find('[name=address]').val(v.address).focus();
+                form.find('[name=mobile]').val(v.mobile).focus();
+                form.find('[name=gender]').val(v.gender).focus();
             }
 
             $(document).on('click', '.close-modal', function () {
