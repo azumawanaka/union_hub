@@ -1,6 +1,7 @@
 
 <div class="modal-body">
     <div class="form-validation">
+        <input type="hidden" id="u" name="u" value="">
         <div class="form-group row">
             <label class="col-lg-12 col-form-label" for="edit_first_name">First Name <span class="text-danger">*</span></label>
             <div class="col-lg-12">

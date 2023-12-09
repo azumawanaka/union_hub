@@ -47,9 +47,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // User Controller
     Route::resource('users', \App\Http\Controllers\UserController::class)->except([
-        'create',
+        'create', 'update',
     ]);
     Route::get('users/{id}/get_user', [\App\Http\Controllers\UserController::class, 'getUserById'])->name('users.info');
     Route::post('users/all', [\App\Http\Controllers\UserController::class, 'getAllUsers'])->name('users.all');
-    Route::post('users/{id}/update_user', [\App\Http\Controllers\UserController::class, 'updateUser'])->name('users.update_user');
+    Route::put('users/{id}/update_user', [\App\Http\Controllers\UserController::class, 'updateUser'])->name('users.update_user');
 });

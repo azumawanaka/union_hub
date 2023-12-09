@@ -92,10 +92,10 @@ $(".form-user").validate({
             required: true,
             minlength: 3
         },
-        "last_name": {
-            required: true,
-            minlength: 3
-        },
+        // "last_name": {
+        //     required: true,
+        //     minlength: 3
+        // },
         "gender": {
             required: true
         },
@@ -113,10 +113,10 @@ $(".form-user").validate({
             required: "Please enter a first name!",
             minlength: "First name must consist of at least 3 characters"
         },
-        "last_name": {
-            required: "Please enter a last name!",
-            minlength: "Last name must consist of at least 3 characters"
-        },
+        // "last_name": {
+        //     required: "Please enter a last name!",
+        //     minlength: "Last name must consist of at least 3 characters"
+        // },
         "gender": "Please select gender!",
         "email": {
             required: "Please enter an email address",
@@ -151,10 +151,10 @@ $(".form-user-edit").validate({
             required: true,
             minlength: 3
         },
-        "last_name": {
-            required: true,
-            minlength: 3
-        },
+        // "last_name": {
+        //     required: true,
+        //     minlength: 3
+        // },
         "gender": {
             required: true
         },

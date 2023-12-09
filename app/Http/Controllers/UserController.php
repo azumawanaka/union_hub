@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\DeleteUserAction;
 use App\Actions\GetUserAction;
 use App\Actions\StoreUserAction;
 use App\Actions\UpdateUserAction;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -102,68 +103,53 @@ class UserController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string $id
-     * @param UpdateUserAction $updateUserAction
-     *
-     * @return RedirectResponse
-     */
-    public function updateUser(Request $request, string $id, UpdateUserAction $updateUserAction): RedirectResponse
-    {
-        try {
-            $updateUserAction->execute($id, $request->all());
-        } catch (\Throwable $th) {
-            return redirect()->back()->with('error', $th->getMessage());
-        }
-        return redirect()->back()->with('success', 'User was successfully updated.');
-    }
-
-
-    /**
-     * @param Request $request
+     * @param UserRequest $userRequest
      * @param StoreUserAction $storeUserAction
      *
      * @return RedirectResponse
      */
-    public function store(Request $request, StoreUserAction $storeUserAction): RedirectResponse
+    public function store(UserRequest $userRequest, StoreUserAction $storeUserAction): RedirectResponse
     {
         try {
-            $storeUserAction->execute($request->all());
+            $storeUserAction->execute($userRequest->all());
+            return redirect()->back()->with('success', 'User was successfully added.');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', $th->getMessage());
+            \Log::info('errors: ', [$th]);
+            return redirect()->back()->withErrors($th->getMessage());
         }
-        return redirect()->back()->with('success', 'User was successfully added.');
     }
 
     /**
-     * Display the specified resource.
+     * @param UserRequest $userRequest
+     * @param string $id
+     * @param UpdateUserAction $updateUserAction
+     *
+     * @return JsonResponse
      */
-    public function show(string $id)
+    public function updateUser(UserRequest $userRequest, string $id, UpdateUserAction $updateUserAction): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        try {
+            $updateUserAction->execute($id, $userRequest->all());
+            return response()->json($this->responseMsg('User was successfully updated.', 'success'));
+        } catch (\Throwable $th) {
+            return response()->json($this->responseMsg($th->getMessage(), 'error'));
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, DeleteUserAction $deleteUserAction): JsonResponse
     {
-        //
+        $deleteUserAction->execute($id);
+        return response()->json($this->responseMsg('User was successfully deleted.', 'success'));
+    }
+
+    private function responseMsg($msg, $status): array
+    {
+        return [
+            'message' => $msg,
+            'status' => $status,
+        ];
     }
 }

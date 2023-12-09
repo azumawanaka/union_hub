@@ -67,7 +67,7 @@
                         title: 'Actions',
                         orderable: false,
                         render: function (data, type, row) {
-                            var editButton = '<button id="edit_user" class="btn btn-xs btn-primary mr-1" data-href="' +
+                            var editButton = '<button id="edit_user" class="btn btn-xs btn-primary mr-1" data-user="'+data.u_id+'" data-href="' +
                                 '{{ route("users.update_user", ":id") }}"'.replace(':id', data.u_id) +
                                 '" data-get="' +
                                 '{{ route("users.info", ":id") }}"'.replace(':id', data.u_id) +
@@ -82,9 +82,13 @@
                 ]
             });
 
+            let userId;
             $(document).on('click', '#edit_user', function () {
                 var editUrl = $(this).data('href');
                 var userUrl = $(this).data('get');
+
+                userId = $(this).data('user');
+                $('#u').val(userId);
 
                 emptyFields('#userEditModal');
 
@@ -94,6 +98,48 @@
                 getuser(userUrl, '#userEditModal');
 
                 $('#userEditModal').modal('show');
+            });
+
+            $(document).on('submit', '.form-user-edit', function(event) {
+                event.preventDefault();
+
+                var form = $(this);
+                var url = form.attr('action');
+
+                $.ajax({
+                    url: url,
+                    type: 'PUT',
+                    data: form.serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        $('#userEditModal').modal('hide');
+
+                        triggerToaster(response.message);
+                        dataTable.ajax.reload();
+                    },
+                    error: function(error) {
+                        console.log(error.responseJSON.errors);
+                        const errors = error.responseJSON.errors;
+
+                        for (var fieldName in errors) {
+                            if (errors.hasOwnProperty(fieldName)) {
+                                var errorMessages = errors[fieldName];
+
+                                console.log('Field: ' + fieldName);
+                                console.log('Error Messages:');
+
+                                for (var i = 0; i < errorMessages.length; i++) {
+                                    const feebackDiv = `<div class="invalid-feedback animated fadeInUp" style="display: block;">${errorMessages[i]}</div>`;
+
+                                    jQuery(`#edit_${fieldName}`).addClass('is-invalid');
+                                    jQuery(`#edit_${fieldName}`).parents(".form-group > div").append(feebackDiv)
+                                }
+                            }
+                        }
+                    }
+                });
             });
 
 
@@ -120,6 +166,8 @@
             $(document).on('click', '#add_user', function(e) {
                 e.preventDefault();
                 userRoute = $(this).attr('data-href');
+
+                $('#u').val('');
 
                 $('#userModal form').attr('action', userRoute);
 
