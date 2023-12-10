@@ -176,7 +176,7 @@ class EventController extends Controller
 
     public function getJsonTypeEvents(): JsonResponse
     {
-        $data = Event::all();
+        $data = Event::get();
         return response()->json($data);
     }
 

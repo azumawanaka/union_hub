@@ -26,7 +26,7 @@
                 lengthMenu: [10, 25, 50, 100],
                 pageLength: 10,
                 ajax: {
-                    url: 'service_request/all',
+                    url: 'service_requests/all',
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
