@@ -21,6 +21,11 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('calendar.index') }}" aria-expanded="false">
+                    <i class="icon-calendar menu-icon"></i><span class="nav-text">Event Calendar</span>
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('users.index') }}" aria-expanded="false">
                     <i class="icon-user menu-icon"></i><span class="nav-text">Users</span>
                 </a>

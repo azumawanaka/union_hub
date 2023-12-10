@@ -174,6 +174,12 @@ class EventController extends Controller
         return response()->json($data);
     }
 
+    public function getJsonTypeEvents(): JsonResponse
+    {
+        $data = Event::all();
+        return response()->json($data);
+    }
+
     /**
      * @param string $id
      * @param DeleteEventAction $deleteEventAction

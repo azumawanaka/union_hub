@@ -52,15 +52,15 @@
                     { data: 'u_address', name: 'u_address', title: 'Address' },
                     { data: 'u_mobile', name: 'u_mobile', title: 'Mobile' },
                     { data: 'u_gender', name: 'u_gender', title: 'Gender' },
-                    {
-                        data: 'u_role',
-                        name: 'u_role',
-                        title: 'Role',
-                        orderable: true,
-                        render: function (data, type, row) {
-                            return data == 0 ? 'user' : 'admin';
-                        }
-                    },
+                    // {
+                    //     data: 'u_role',
+                    //     name: 'u_role',
+                    //     title: 'Role',
+                    //     orderable: true,
+                    //     render: function (data, type, row) {
+                    //         return data == 0 ? 'user' : 'admin';
+                    //     }
+                    // },
                     { data: 'u_created_at', name: 'u_created_at', title: 'Added At' },
                     {
                         data: null,

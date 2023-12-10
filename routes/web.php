@@ -44,6 +44,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     ]);
     Route::post('events/{id}/update_event', [\App\Http\Controllers\EventController::class, 'updateEvent'])->name('events.update_event');
     Route::post('events/all', [\App\Http\Controllers\EventController::class, 'getAllEvents'])->name('events.all');
+    Route::get('events/all/json_type', [\App\Http\Controllers\EventController::class, 'getJsonTypeEvents'])->name('events.json_type_events');
 
     // User Controller
     Route::resource('users', \App\Http\Controllers\UserController::class)->except([
@@ -53,3 +54,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('users/all', [\App\Http\Controllers\UserController::class, 'getAllUsers'])->name('users.all');
     Route::put('users/{id}/update_user', [\App\Http\Controllers\UserController::class, 'updateUser'])->name('users.update_user');
 });
+
+Route::resource('calendar', \App\Http\Controllers\Calendar::class)->except([
+    'create', 'update',
+]);
+
