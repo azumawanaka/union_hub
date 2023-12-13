@@ -3,12 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UserRequest extends FormRequest
+class ClientRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Determine if the client is authorized to make this request.
      *
      * @return bool
      */
@@ -25,11 +24,11 @@ class UserRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'first_name' => 'required',
+            'name' => 'required',
             'email' => [
                 'required',
                 'email',
-                'unique:users,email,' . $this->input('u'),
+                'unique:clients,email,' . $this->input('u'),
             ],
         ];
 

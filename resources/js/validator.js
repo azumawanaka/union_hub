@@ -92,10 +92,6 @@ $(".form-user").validate({
             required: true,
             minlength: 3
         },
-        // "last_name": {
-        //     required: true,
-        //     minlength: 3
-        // },
         "gender": {
             required: true
         },
@@ -113,10 +109,6 @@ $(".form-user").validate({
             required: "Please enter a first name!",
             minlength: "First name must consist of at least 3 characters"
         },
-        // "last_name": {
-        //     required: "Please enter a last name!",
-        //     minlength: "Last name must consist of at least 3 characters"
-        // },
         "gender": "Please select gender!",
         "email": {
             required: "Please enter an email address",
@@ -143,18 +135,12 @@ $(".form-user").validate({
     },
 });
 
-
-
 $(".form-user-edit").validate({
     rules: {
         "first_name": {
             required: true,
             minlength: 3
         },
-        // "last_name": {
-        //     required: true,
-        //     minlength: 3
-        // },
         "gender": {
             required: true
         },
@@ -173,6 +159,43 @@ $(".form-user-edit").validate({
             minlength: "Last name must consist of at least 3 characters"
         },
         "gender": "Please select gender!",
+        "email": {
+            required: "Please enter an email address",
+            email: "Please enter a valid email address",
+        },
+    },
+
+    ignore: [],
+    errorClass: "invalid-feedback animated fadeInUp",
+    errorElement: "div",
+    errorPlacement: function(e, a) {
+        jQuery(a).parents(".form-group > div").append(e)
+    },
+    highlight: function(e) {
+        jQuery(e).closest(".form-group").removeClass("is-invalid").addClass("is-invalid");
+    },
+    success: function(e) {
+        jQuery(e).closest(".form-group").removeClass("is-invalid");
+        jQuery(e).remove();
+    },
+});
+
+$(".form-client").validate({
+    rules: {
+        "name": {
+            required: true,
+            minlength: 3
+        },
+        "email": {
+            required: true,
+            email: true,
+        },
+    },
+    messages: {
+        "name": {
+            required: "Please enter a first name!",
+            minlength: "First name must consist of at least 3 characters"
+        },
         "email": {
             required: "Please enter an email address",
             email: "Please enter a valid email address",

@@ -79,6 +79,17 @@ class UserController extends Controller
         }
     }
 
+    private function applyOrdering($query, $order, $request)
+    {
+        if (!empty($order) && count($order) > 0) {
+            $columnIndex = $order[0]['column'];
+            $columnName = $request->input("columns.$columnIndex.name");
+            $columnDirection = $order[0]['dir'];
+
+            $query->orderBy($columnName, $columnDirection);
+        }
+    }
+
     /**
      * @param string $id
      * @param GetUserAction $getUserAction
@@ -89,17 +100,6 @@ class UserController extends Controller
     {
         $data = $getUserAction->execute($id);
         return response()->json($data);
-    }
-
-    private function applyOrdering($query, $order, $request)
-    {
-        if (!empty($order) && count($order) > 0) {
-            $columnIndex = $order[0]['column'];
-            $columnName = $request->input("columns.$columnIndex.name");
-            $columnDirection = $order[0]['dir'];
-
-            $query->orderBy($columnName, $columnDirection);
-        }
     }
 
     /**

@@ -68,7 +68,6 @@
                             return statusHTML;
                         }
                     },
-                    // { data: 'sr_status', name: 'service_requests.status', title: 'Status' },
                     { data: 'details', name: 'details', title: 'Details' },
                     { data: 'sr_created_at', name: 'service_requests.created_at', title: 'Created At', width: "100px" },
                     {

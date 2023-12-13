@@ -42,17 +42,25 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('events', \App\Http\Controllers\EventController::class)->except([
         'create', 'edit', 'update'
     ]);
-    Route::post('events/{id}/update_event', [\App\Http\Controllers\EventController::class, 'updateEvent'])->name('events.update_event');
     Route::post('events/all', [\App\Http\Controllers\EventController::class, 'getAllEvents'])->name('events.all');
+    Route::post('events/{id}/update_event', [\App\Http\Controllers\EventController::class, 'updateEvent'])->name('events.update_event');
     Route::get('events/all/json_type', [\App\Http\Controllers\EventController::class, 'getJsonTypeEvents'])->name('events.json_type_events');
 
     // User Controller
     Route::resource('users', \App\Http\Controllers\UserController::class)->except([
         'create', 'update',
     ]);
-    Route::get('users/{id}/get_user', [\App\Http\Controllers\UserController::class, 'getUserById'])->name('users.info');
     Route::post('users/all', [\App\Http\Controllers\UserController::class, 'getAllUsers'])->name('users.all');
+    Route::get('users/{id}/get_user', [\App\Http\Controllers\UserController::class, 'getUserById'])->name('users.info');
     Route::put('users/{id}/update_user', [\App\Http\Controllers\UserController::class, 'updateUser'])->name('users.update_user');
+
+    // Client Controller
+    Route::resource('clients', \App\Http\Controllers\ClientController::class)->except([
+        'create', 'edit', 'update'
+    ]);
+    Route::post('clients/all', [\App\Http\Controllers\ClientController::class, 'getAllClients'])->name('clients.all');
+    Route::get('clients/{id}/get_client', [\App\Http\Controllers\ClientController::class, 'getClientById'])->name('clients.info');
+    Route::put('clients/{id}/update_client', [\App\Http\Controllers\ClientController::class, 'updateClient'])->name('clients.update_client');
 });
 
 Route::resource('calendar', \App\Http\Controllers\Calendar::class)->except([
