@@ -64,7 +64,8 @@
     <script src="{{ asset('assets/plugins/jqueryui/js/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/fullcalendar/js/fullcalendar.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins-init/fullcalendar-init.js') }}"></script>
+
+    @vite(['resources/js/event-calendar.js'])
 
     @stack('scripts')
 </body>

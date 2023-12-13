@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="card-title">
-                        <h4>Calendar</h4>
+                        <h4>Event Calendar</h4>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
