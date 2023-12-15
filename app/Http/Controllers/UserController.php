@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\DeleteUserAction;
 use App\Actions\GetUserAction;
+use App\Actions\SelectUserAction;
 use App\Actions\StoreUserAction;
 use App\Actions\UpdateUserAction;
 use App\Http\Requests\UserRequest;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -27,7 +29,7 @@ class UserController extends Controller
      *
      * @return JsonResponse
      */
-    public function getAllUsers(Request $request): JsonResponse
+    public function getAllUsers(Request $request, SelectUserAction $selectUserAction): JsonResponse
     {
         $draw = $request->input('draw');
         $start = $request->input('start');
@@ -35,17 +37,7 @@ class UserController extends Controller
         $order = $request->input('order');
         $search = $request->input('search');
 
-        $query = User::where('id', '!=', auth()->user()->id)->select(
-            'users.id as u_id',
-            'users.first_name as u_fn',
-            'users.last_name as u_ln',
-            'users.email as u_email',
-            'users.address as u_address',
-            'users.mobile as u_mobile',
-            'users.gender as u_gender',
-            'users.role as u_role',
-            'users.created_at as u_created_at',
-        );
+        $query = $selectUserAction->execute();
 
         $this->applySearchConditions($query, $search);
         $this->applyOrdering($query, $order, $request);
@@ -67,8 +59,7 @@ class UserController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('users.id', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.id', 'like', '%' . $search['value'] . '%')
-                    ->orWhere('users.first_name', 'like', '%' . $search['value'] . '%')
-                    ->orWhere('users.last_name', 'like', '%' . $search['value'] . '%')
+                    ->orWhere(DB::raw("CONCAT(users.first_name, ' ', users.last_name)"), 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.email', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.address', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.mobile', 'like', '%' . $search['value'] . '%')

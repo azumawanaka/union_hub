@@ -37,7 +37,7 @@ class Event extends Model
         'category',
         'status',
         'color',
-        'max_participant',
+        'max_participants',
     ];
 
     public function eventParticipants(): HasMany

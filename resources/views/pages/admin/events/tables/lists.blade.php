@@ -53,10 +53,18 @@
                         },
                         width: '80px'
                     },
-                    { data: 'description', name: 'description', title: 'Description', width: '250px' },
+                    // {
+                    //     data: 'description',
+                    //     name: 'description',
+                    //     title: 'Description',
+                    //     render: function (data, type, row) {
+                    //         return data.substring(0, 30) + '...';
+                    //     },
+                    //     width: '250px'
+                    // },
                     { data: 'start_date', name: 'start_date', title: 'Start Date', width: '120px' },
                     { data: 'end_date', name: 'end_date', title: 'End Date', width: '120px' },
-                    { data: 'participant_count', name: 'participant_count', title: 'No. of participants', width: '120px' },
+                    { data: 'participant_count', name: 'participant_count', title: 'Total Attendees', width: '120px' },
                     {
                         data: 'status',
                         name: 'status',
@@ -99,7 +107,7 @@
                                 '">Delete</button>';
                             return editButton + deleteButton;
                         },
-                        width: '90px'
+                        width: '110px'
                     }
                 ]
             });

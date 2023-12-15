@@ -46,12 +46,11 @@
                 },
                 columns: [
                     { data: 'u_id', name: 'u_id', title: 'ID' },
-                    { data: 'u_fn', name: 'u_fn', title: 'First Name' },
-                    { data: 'u_ln', name: 'u_ln', title: 'Last Name' },
+                    { data: 'full_name', name: 'full_name', title: 'Name' },
                     { data: 'u_email', name: 'u_email', title: 'Email' },
-                    { data: 'u_address', name: 'u_address', title: 'Address' },
-                    { data: 'u_mobile', name: 'u_mobile', title: 'Mobile' },
-                    { data: 'u_gender', name: 'u_gender', title: 'Gender' },
+                    // { data: 'u_address', name: 'u_address', title: 'Address' },
+                    // { data: 'u_mobile', name: 'u_mobile', title: 'Mobile' },
+                    // { data: 'u_gender', name: 'u_gender', title: 'Gender' },
                     // {
                     //     data: 'u_role',
                     //     name: 'u_role',
@@ -77,7 +76,8 @@
                                 '">Delete</button>';
 
                             return editButton + deleteButton;
-                        }
+                        },
+                        width: '100px'
                     }
                 ]
             });
@@ -208,7 +208,7 @@
                 form.find('[name=email]').val(v.email).focus();
                 form.find('[name=address]').val(v.address).focus();
                 form.find('[name=mobile]').val(v.mobile).focus();
-                form.find('[name=gender]').val(v.gender).focus();
+                form.find('[name=gender]').val(v.gender).change();
             }
 
             $(document).on('click', '.close-modal', function () {

@@ -47,9 +47,9 @@
                     { data: 'c_name', name: 'c_name', title: 'Name' },
                     { data: 'c_email', name: 'c_email', title: 'Email' },
                     { data: 'c_address', name: 'c_address', title: 'Address' },
-                    { data: 'c_mobile', name: 'c_mobile', title: 'Mobile' },
-                    { data: 'c_created_at', name: 'c_created_at', title: 'Added At' },
+                    // { data: 'c_mobile', name: 'c_mobile', title: 'Mobile' },
                     { data: 'total_services', name: 'total_services', title: 'Total Services' },
+                    { data: 'c_created_at', name: 'c_created_at', title: 'Added At' },
                     {
                         data: null,
                         title: 'Actions',
@@ -65,7 +65,8 @@
                                 '">Delete</button>';
 
                             return editButton + deleteButton;
-                        }
+                        },
+                        width: '100px'
                     }
                 ]
             });
