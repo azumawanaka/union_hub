@@ -127,6 +127,11 @@ class UserController extends Controller
         }
     }
 
+    public function edit(string $id)
+    {
+        return view('pages.profile');
+    }
+
     /**
      * Remove the specified resource from storage.
      */

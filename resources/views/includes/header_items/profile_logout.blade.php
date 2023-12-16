@@ -6,7 +6,7 @@
     <div class="dropdown-content-body">
         <ul>
             <li>
-                <a href="#profile"><i class="icon-user"></i> <span>Profile</span></a>
+                <a href="{{ route('users.edit', auth()->user()->id) }}"><i class="icon-user"></i> <span>Profile</span></a>
             </li>
 
             <hr class="my-2">

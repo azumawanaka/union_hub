@@ -4,3 +4,75 @@
         max-width: 185px;
     }
 }
+
+/* Custom styling for the profile picture preview */
+#profilePictureContainer {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 0 auto;
+    background-color: #f1f1f1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid #fff; /* Add a border for contrast */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+}
+
+#profilePicturePreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+#dummyProfilePicture {
+    width: 60%;
+    height: auto;
+    display: none;
+}
+
+/* Style the label to look like a button */
+#uploadButton {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    outline: none;
+    border-radius: 4px;
+    display: inline-block;
+    opacity: 0;
+}
+
+#uploadButton:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}
+
+/* Hide the file input */
+#profilePictureInput {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+#userInfo {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Style for icons */
+.fa-icon {
+    margin-right: 5px;
+}
