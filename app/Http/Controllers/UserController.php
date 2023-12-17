@@ -6,6 +6,7 @@ use App\Actions\DeleteUserAction;
 use App\Actions\GetUserAction;
 use App\Actions\SelectUserAction;
 use App\Actions\StoreUserAction;
+use App\Actions\UpdateProfilePhotoAction;
 use App\Actions\UpdateUserAction;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
@@ -13,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -129,7 +131,43 @@ class UserController extends Controller
 
     public function edit(string $id)
     {
-        return view('pages.profile');
+        return view('pages.user.edit-profile');
+    }
+
+    /**
+     * @param Request $request
+     * @param UpdateProfilePhotoAction $updateProfilePhotoAction
+     *
+     * @return JsonResponse
+     */
+    public function uploadProfilePhoto(Request $request, UpdateProfilePhotoAction $updateProfilePhotoAction): JsonResponse
+    {
+        // Retrieve the current profile photo path
+        $previousProfilePhotoPath = auth()->user()->photo;
+
+        if ($request->hasFile('profile_picture') && $request->file('profile_picture')->isValid()) {
+            $file = $request->file('profile_picture');
+
+            // Generate a unique filename
+            $filename = uniqid('profile_', true) . '.' . $file->extension();
+
+            // Store the file in the storage directory with the specified filename
+            $path = $file->storeAs('profile_pictures', $filename, 'public');
+
+            // Delete the previous profile photo if it exists
+            if ($previousProfilePhotoPath) {
+                Storage::disk('public')->delete(str_replace('storage/', '', $previousProfilePhotoPath));
+            }
+
+            // Save the file path to the user's profile_picture column
+            $updateProfilePhotoAction->execute(['file' => 'storage/'.$path]);
+
+            // Optionally, you can return a JSON response
+            return response()->json($this->responseMsg('Image was successfully uploaded.', 'success'));
+        }
+
+        // Optionally, you can return a JSON response
+        return response()->json('Failed to upload image.', 'error');
     }
 
     /**

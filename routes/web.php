@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('client/search', [\App\Http\Controllers\ClientController::class, 'search'])->name('client.search');
+Route::post('/upload-photo', [\App\Http\Controllers\UserController::class, 'uploadProfilePhoto'])->name('upload.profile-photo');
 
 Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -216,3 +216,50 @@ $(".form-client").validate({
         jQuery(e).remove();
     },
 });
+
+$.validator.addMethod(
+    "phoneValidation",
+    function(value, element) {
+      // Define a regular expression for both regular telephone and cell phone numbers
+      const phoneRegex = /^(\+?\d{12}|\d{11})$/;
+
+      // Check if the phone number matches the regular expression
+      return this.optional(element) || phoneRegex.test(value);
+    },
+    "Please enter a valid phone number."
+);
+
+// Initialize the form validation
+$(".form-profile").validate({
+    rules: {
+      "first_name": {
+        required: true,
+        minlength: 3
+      },
+      "mobile": {
+        phoneValidation: true  // Use the custom phoneValidation method
+      }
+    },
+    messages: {
+      "first_name": {
+        required: "Please enter a first name!",
+        minlength: "First name must consist of at least 3 characters"
+      },
+      "mobile": {
+        phoneValidation: "Please enter a valid phone number."
+      }
+    },
+    ignore: [],
+    errorClass: "invalid-feedback animated fadeInUp",
+    errorElement: "div",
+    errorPlacement: function(e, a) {
+      jQuery(a).parents(".form-group > div").append(e);
+    },
+    highlight: function(e) {
+      jQuery(e).closest(".form-group").removeClass("is-invalid").addClass("is-invalid");
+    },
+    success: function(e) {
+      jQuery(e).closest(".form-group").removeClass("is-invalid");
+      jQuery(e).remove();
+    },
+  });

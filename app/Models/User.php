@@ -27,6 +27,7 @@ class User extends Authenticatable
         'mobile',
         'gender',
         'role',
+        'photo',
     ];
 
     /**
@@ -49,6 +50,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
     public function events(): HasMany
     {
         return $this->hasMany(Event::class);
@@ -57,6 +63,11 @@ class User extends Authenticatable
     public function eventParticipants(): HasMany
     {
         return $this->hasMany(EventParticipant::class);
+    }
+
+    public function getTotalAttendedEventsAttribute()
+    {
+        return $this->eventParticipants()->count();
     }
 
     public function reports(): HasMany
@@ -72,5 +83,10 @@ class User extends Authenticatable
     public function serviceRequests(): HasMany
     {
         return $this->hasMany(ServiceRequest::class);
+    }
+
+    public function getTotalServiceRequestsAttribute()
+    {
+        return $this->serviceRequests()->count();
     }
 }
