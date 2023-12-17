@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CheckOldPasswordAction;
 use App\Actions\DeleteUserAction;
 use App\Actions\GetUserAction;
 use App\Actions\SelectUserAction;
 use App\Actions\StoreUserAction;
+use App\Actions\UpdatePasswordAction;
 use App\Actions\UpdateProfilePhotoAction;
 use App\Actions\UpdateUserAction;
 use App\Http\Requests\UserRequest;
@@ -18,6 +20,11 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('web');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -168,6 +175,44 @@ class UserController extends Controller
 
         // Optionally, you can return a JSON response
         return response()->json('Failed to upload image.', 'error');
+    }
+
+    public function show($id)
+    {
+        abort(404);
+    }
+
+    /**
+     * @param Request $request
+     * @param CheckOldPasswordAction $checkOldPasswordAction
+     *
+     * @return JsonResponse
+     */
+    public function checkOldPassword(Request $request, CheckOldPasswordAction $checkOldPasswordAction): JsonResponse
+    {
+        $data = [
+            'user_id' => $request['user_id'],
+            'password' => $request['old_password'],
+        ];
+        $isSame = $checkOldPasswordAction->execute($data);
+        return response()->json($isSame);
+    }
+
+    /**
+     * @param string $id
+     * @param Request $request
+     * @param UpdatePasswordAction $updatePaswordAction
+     *
+     *@return JsonResponse
+     */
+    public function updatePassword(string $id, Request $request, UpdatePasswordAction $updatePaswordAction): JsonResponse
+    {
+        try {
+            $updatePaswordAction->execute($id, $request->all());
+            return response()->json($this->responseMsg('Password was successfully updated.', 'success'));
+        } catch (\Throwable $th) {
+            return response()->json($this->responseMsg($th->getMessage(), 'error'));
+        }
     }
 
     /**

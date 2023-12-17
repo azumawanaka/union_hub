@@ -229,7 +229,6 @@ $.validator.addMethod(
     "Please enter a valid phone number."
 );
 
-// Initialize the form validation
 $(".form-profile").validate({
     rules: {
       "first_name": {
@@ -262,4 +261,77 @@ $(".form-profile").validate({
       jQuery(e).closest(".form-group").removeClass("is-invalid");
       jQuery(e).remove();
     },
-  });
+});
+
+$(".form-password").validate({
+    rules: {
+        "old_password": {
+            required: true,
+            minlength: 6,
+            remote: {
+                url: "/check-old-password",
+                type: "post",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    old_password: function() {
+                        return $("#old_password").val();
+                    },
+                    user_id: function () {
+                        return $("#user_id").val();
+                    }
+                }
+            }
+        },
+        "new_password": {
+            required: true,
+            minlength: 6,
+            notEqualTo: "#old_password",
+            containsSpecialChar: true,
+            containsNumber: true
+        }
+    },
+    messages: {
+        "old_password": {
+            required: "Please enter your old password!",
+            minlength: "Password must consist of at least 6 characters",
+            remote: "Incorrect old password"
+        },
+        "new_password": {
+            required: "Please enter your new password!",
+            minlength: "Password must consist of at least 6 characters",
+            notEqualTo: "New password must be different from old password",
+            containsSpecialChar: "Password must contain at least one special character",
+            containsNumber: "Password must contain at least one number"
+        }
+    },
+    ignore: [],
+    errorClass: "invalid-feedback animated fadeInUp",
+    errorElement: "div",
+    errorPlacement: function(e, a) {
+        jQuery(a).parents(".form-group > div").append(e);
+    },
+    highlight: function(e) {
+        jQuery(e).closest(".form-group").removeClass("is-invalid").addClass("is-invalid");
+    },
+    success: function(e) {
+        jQuery(e).closest(".form-group").removeClass("is-invalid");
+        jQuery(e).remove();
+    },
+});
+
+// Custom validation method for notEqualTo
+$.validator.addMethod("notEqualTo", function(value, element, param) {
+    return value !== $(param).val();
+}, "Please choose a different value.");
+
+// Custom validation method for containing special character
+$.validator.addMethod("containsSpecialChar", function(value) {
+    return /[!@#$%^&*(),.?":{}|<>]/.test(value);
+}, "Password must contain at least one special character");
+
+// Custom validation method for containing number
+$.validator.addMethod("containsNumber", function(value) {
+    return /\d/.test(value);
+}, "Password must contain at least one number");

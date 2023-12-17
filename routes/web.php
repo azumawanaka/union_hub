@@ -16,6 +16,9 @@ Auth::routes();
 
 Route::get('client/search', [\App\Http\Controllers\ClientController::class, 'search'])->name('client.search');
 Route::post('/upload-photo', [\App\Http\Controllers\UserController::class, 'uploadProfilePhoto'])->name('upload.profile-photo');
+Route::put('users/{id}/update_user', [\App\Http\Controllers\UserController::class, 'updateUser'])->name('users.update_user');
+Route::post('users/{id}/update_password', [\App\Http\Controllers\UserController::class, 'updatePassword'])->name('users.update_password');
+Route::post('/check-old-password', [\App\Http\Controllers\UserController::class, 'checkOldPassword'])->name('users.check_old_password');
 
 Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -49,11 +52,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // User Controller
     Route::resource('users', \App\Http\Controllers\UserController::class)->except([
-        'create', 'update',
+        'create', 'update'
     ]);
     Route::post('users/all', [\App\Http\Controllers\UserController::class, 'getAllUsers'])->name('users.all');
     Route::get('users/{id}/get_user', [\App\Http\Controllers\UserController::class, 'getUserById'])->name('users.info');
-    Route::put('users/{id}/update_user', [\App\Http\Controllers\UserController::class, 'updateUser'])->name('users.update_user');
 
     // Client Controller
     Route::resource('clients', \App\Http\Controllers\ClientController::class)->except([

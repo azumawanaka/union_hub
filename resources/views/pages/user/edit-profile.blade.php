@@ -5,11 +5,19 @@
     <div class="col-lg-4 col-xl-3">
         @include('pages.user.form.profile')
     </div>
-    <div class="col-lg-8 col-xl-9">
+    <div class="col-md-5">
         <div class="card">
             <div class="card-body">
-                <h2 class="mb-4">Edit Profile</h2>
+                <h3 class="mb-4">Edit Profile</h3>
                 @include('pages.user.form.edit')
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="mb-4">Update Password</h3>
+                @include('pages.user.form.password')
             </div>
         </div>
     </div>
@@ -57,7 +65,6 @@
         }
     }
 
-
     $(document).on('submit', '#editProfileForm', function(event) {
         event.preventDefault();
 
@@ -67,6 +74,28 @@
         $.ajax({
             url: url,
             type: 'PUT',
+            data: form.serialize(),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                triggerToaster(response.message);
+            },
+            error: function(error) {
+                // error message here
+            }
+        });
+    });
+
+    $(document).on('submit', '#updatePasswordForm', function(event) {
+        event.preventDefault();
+
+        var form = $(this);
+        var url = form.attr('action');
+
+        $.ajax({
+            url: url,
+            type: 'POST',
             data: form.serialize(),
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
