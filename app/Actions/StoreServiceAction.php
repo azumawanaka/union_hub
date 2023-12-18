@@ -21,6 +21,7 @@ class StoreServiceAction
             'title' => $data['name'],
             'description' => $data['description'],
             'added_by' => auth()->user()->id,
+            'rate'  => $data['rate'],
         ]);
     }
 }

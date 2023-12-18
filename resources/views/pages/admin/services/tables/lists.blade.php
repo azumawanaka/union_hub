@@ -44,6 +44,15 @@
                 columns: [
                     { data: 's_id', name: 'services.id', title: 'ID' },
                     { data: 'title', name: 'title', title: 'Name' },
+                    {
+                        data: 's_rate',
+                        name: 's_rate',
+                        title: 'Rate',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return `Php ${addCommasToNumber(data)}`;
+                        }
+                    },
                     { data: 's_name', name: 'service_types.name', title: 'Type' },
                     { data: 'description', name: 'description', title: 'Description' },
                     { data: 'c_name', name: 'clients.name', title: 'Client' },
@@ -130,6 +139,7 @@
                     'service_type_id': '',
                     'client_id': '',
                     'description': '',
+                    'rate': 0,
                 };
                 setUpFields(emptyPayload);
             }
@@ -144,11 +154,30 @@
                 $('#client_id').selectpicker('refresh');
 
                 form.find('#descriptions').val(v.description);
+                form.find('#rate').val(v.rate);
             }
 
             $(document).on('click', '.close-modal', function () {
                 $('.modal').modal('hide');
             });
+
+            function addCommasToNumber(number) {
+                // Convert the number to a string
+                let numberString = number.toString();
+
+                // Split the integer and decimal parts (if any)
+                let parts = numberString.split('.');
+                let integerPart = parts[0];
+                let decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+
+                // Add commas to the integer part
+                let formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ', ');
+
+                // Concatenate the formatted integer part with the decimal part
+                let formattedNumber = formattedIntegerPart + decimalPart;
+
+                return formattedNumber;
+            }
         });
     </script>
 

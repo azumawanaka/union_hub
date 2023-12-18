@@ -18,6 +18,7 @@ class SelectServicesAction
         return $this->model->newQuery()
             ->select(
                 'services.id as s_id',
+                'services.rate as s_rate',
                 'title',
                 'description',
                 'clients.name as c_name',

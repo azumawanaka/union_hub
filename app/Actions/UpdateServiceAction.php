@@ -20,6 +20,7 @@ class UpdateServiceAction
             'client_id' => $data['client_id'],
             'title' => $data['name'],
             'description' => $data['description'],
+            'rate'  => $data['rate'],
         ]);
     }
 }

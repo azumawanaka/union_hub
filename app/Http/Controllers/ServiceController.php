@@ -67,6 +67,7 @@ class ServiceController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', '%' . $search['value'] . '%')
                     ->orWhere('services.id', 'like', '%' . $search['value'] . '%')
+                    ->orWhere('services.rate', 'like', '%' . $search['value'] . '%')
                     ->orWhere('description', 'like', '%' . $search['value'] . '%')
                     ->orWhere('services.created_at', 'like', '%' . $search['value'] . '%')
                     ->orWhere('service_types.name', 'like', '%' . $search['value'] . '%')

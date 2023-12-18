@@ -10,13 +10,21 @@ jQuery(".form-service").validate({
             required: !0,
             minlength: 3
         },
+        "rate": {
+            required: !0,
+            numberOrFloat: true
+        }
     },
     messages: {
         "service_type_id": "Please select a service!",
-        "client_id": "Please select a client for that service!",
+        "client_id": "Please select a client for this service.",
         "name": {
-            required: "Please enter a service name!",
-            minlength: "Service name must consist of at least 3 characters"
+            required: "Please enter a name for this service.",
+            minlength: "Service name must consist of at least 3 characters."
+        },
+        "rate": {
+            required: "Please select a rate for this service.",
+            numberOrFloat: "Please enter a valid number or float for this service."
         },
     },
 
@@ -33,6 +41,20 @@ jQuery(".form-service").validate({
         jQuery(e).closest(".form-group").removeClass("is-invalid"), jQuery(e).remove()
     },
 });
+
+jQuery.validator.addMethod("numberOrFloat", function(value, element) {
+   // Check for leading zeros in the integer part
+   let hasLeadingZeros = /^0+/.test(value);
+
+   // Remove leading zeros from the integer part
+   let cleanedValue = value.replace(/^0+/, '');
+
+   // Use a regular expression to check if the cleaned value is a number or a float
+   let isValidNumberOrFloat = /^-?\d+\.?\d*$/.test(cleanedValue);
+
+   return !hasLeadingZeros && isValidNumberOrFloat;
+}, "Please enter a valid number or float.");
+
 
 jQuery(".form-event").validate({
     rules: {

@@ -33,6 +33,13 @@
             </div>
         </div>
         <div class="form-group row">
+            <label class="col-lg-12 col-form-label" for="rate">Rate <span class="text-danger">*</span>
+            </label>
+            <div class="col-lg-12">
+                <input type="text" class="form-control" id="rate" name="rate" placeholder="Enter rate in Php">
+            </div>
+        </div>
+        <div class="form-group row">
             <label class="col-lg-12 col-form-label" for="description">Description</label>
             <div class="col-lg-12">
                 <textarea class="form-control" id="descriptions" name="description" rows="5" placeholder="Write description here..."></textarea>

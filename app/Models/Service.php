@@ -27,6 +27,16 @@ class Service extends Model
         'description',
         'preview_img',
         'client_id',
+        'rate',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'rate' => 'float',
     ];
 
     public function serviceType(): BelongsTo
