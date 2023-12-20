@@ -15,9 +15,9 @@
             </div>
         </div>
         <div class="form-group row">
-            <label class="col-lg-12 col-form-label" for="edit_email">Email <span class="text-danger">*</span></label>
+            <label class="col-lg-12 col-form-label" for="edit_email">Email</label>
             <div class="col-lg-12">
-                <input type="email" class="form-control" id="edit_email" name="email" placeholder="Enter email address..">
+                <input type="email" class="form-control" id="edit_email" name="email" placeholder="Enter email address.." readonly disabled>
             </div>
         </div>
         <div class="form-group row">

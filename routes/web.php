@@ -20,13 +20,22 @@ Route::put('users/{id}/update_user', [\App\Http\Controllers\UserController::clas
 Route::post('users/{id}/update_password', [\App\Http\Controllers\UserController::class, 'updatePassword'])->name('users.update_password');
 Route::post('/check-old-password', [\App\Http\Controllers\UserController::class, 'checkOldPassword'])->name('users.check_old_password');
 
-Route::middleware(['auth', 'user'])->group(function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('users', \App\Http\Controllers\UserController::class)->except([
+        'create', 'update'
+    ]);
+
+    // Event Controller
+    Route::resource('events', \App\Http\Controllers\EventController::class)->except([
+        'create', 'edit', 'update'
+    ]);
+    Route::post('events/{id}/update_event', [\App\Http\Controllers\EventController::class, 'updateEvent'])->name('events.update_event');
+    Route::post('events/all', [\App\Http\Controllers\EventController::class, 'getAllEvents'])->name('events.all');
+    Route::get('events/all/json_type', [\App\Http\Controllers\EventController::class, 'getJsonTypeEvents'])->name('events.json_type_events');
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
-
+Route::middleware(['admin'])->group(function () {
     // Service Controller
     Route::resource('services', \App\Http\Controllers\ServiceController::class)->except([
         'create', 'edit', 'show', 'update'
@@ -42,18 +51,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('service_requests/{id}/update_status', [\App\Http\Controllers\ServiceRequestController::class, 'updateStatus'])->name('service_requests.update_status');
     Route::post('service_requests/all', [\App\Http\Controllers\ServiceRequestController::class, 'getAllServiceRequests'])->name('service_requests.all');
 
-    // Event Controller
-    Route::resource('events', \App\Http\Controllers\EventController::class)->except([
-        'create', 'edit', 'update'
-    ]);
-    Route::post('events/all', [\App\Http\Controllers\EventController::class, 'getAllEvents'])->name('events.all');
-    Route::post('events/{id}/update_event', [\App\Http\Controllers\EventController::class, 'updateEvent'])->name('events.update_event');
-    Route::get('events/all/json_type', [\App\Http\Controllers\EventController::class, 'getJsonTypeEvents'])->name('events.json_type_events');
-
     // User Controller
-    Route::resource('users', \App\Http\Controllers\UserController::class)->except([
-        'create', 'update'
-    ]);
     Route::post('users/all', [\App\Http\Controllers\UserController::class, 'getAllUsers'])->name('users.all');
     Route::get('users/{id}/get_user', [\App\Http\Controllers\UserController::class, 'getUserById'])->name('users.info');
 

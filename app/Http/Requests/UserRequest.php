@@ -26,13 +26,18 @@ class UserRequest extends FormRequest
     {
         $rules = [
             'first_name' => 'required',
-            'email' => [
+        ];
+        if (empty($this->input('u'))) {
+            $rules['email'] = [
                 'required',
                 'email',
                 'unique:users,email,' . $this->input('u'),
-            ],
-        ];
-
+            ];
+        } else {
+            $rules['email'] = [
+                'email',
+            ];
+        }
         return $rules;
     }
 }

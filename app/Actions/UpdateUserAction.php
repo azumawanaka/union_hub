@@ -18,7 +18,6 @@ class UpdateUserAction
         $payloads = [
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
-            'email' => $data['email'],
             'address' => $data['address'],
             'mobile' => $data['mobile'],
             'gender' => $data['gender'],

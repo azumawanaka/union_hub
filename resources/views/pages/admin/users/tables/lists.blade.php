@@ -46,7 +46,7 @@
                 },
                 columns: [
                     { data: 'u_id', name: 'u_id', title: 'ID' },
-                    { data: 'full_name', name: 'full_name', title: 'Name' },
+                    { data: 'f_n', name: 'f_n', title: 'Name' },
                     { data: 'u_email', name: 'u_email', title: 'Email' },
                     // { data: 'u_address', name: 'u_address', title: 'Address' },
                     // { data: 'u_mobile', name: 'u_mobile', title: 'Mobile' },
@@ -205,7 +205,7 @@
 
                 form.find('[name=first_name]').val(v.first_name).focus();
                 form.find('[name=last_name]').val(v.last_name).focus();
-                form.find('[name=email]').val(v.email).focus();
+                form.find('[name=email]').val(v.email);
                 form.find('[name=address]').val(v.address).focus();
                 form.find('[name=mobile]').val(v.mobile).focus();
                 form.find('[name=gender]').val(v.gender).change();

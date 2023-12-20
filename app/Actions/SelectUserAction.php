@@ -19,7 +19,7 @@ class SelectUserAction
         return $this->model->newQuery()
             ->where('id', '!=', auth()->user()->id)->select(
                 'users.id as u_id',
-                DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"),
+                DB::raw("CONCAT_WS(' ', users.first_name, users.last_name) as f_n"),
                 'users.email as u_email',
                 'users.address as u_address',
                 'users.mobile as u_mobile',

@@ -1,3 +1,10 @@
+.login-logo {
+    position: absolute;
+    bottom: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 .brand-title {
     img {
         width: 100%;
@@ -78,4 +85,8 @@
 /* Style for icons */
 .fa-icon {
     margin-right: 5px;
+}
+
+.fc-view.fc-month-view.fc-basic-view {
+    z-index: 0!important;
 }

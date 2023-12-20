@@ -166,10 +166,10 @@ $(".form-user-edit").validate({
         "gender": {
             required: true
         },
-        "email": {
-            required: true,
-            email: true,
-        },
+        // "email": {
+        //     required: true,
+        //     email: true,
+        // },
     },
     messages: {
         "first_name": {
@@ -181,10 +181,10 @@ $(".form-user-edit").validate({
             minlength: "Last name must consist of at least 3 characters"
         },
         "gender": "Please select gender!",
-        "email": {
-            required: "Please enter an email address",
-            email: "Please enter a valid email address",
-        },
+        // "email": {
+        //     required: "Please enter an email address",
+        //     email: "Please enter a valid email address",
+        // },
     },
 
     ignore: [],

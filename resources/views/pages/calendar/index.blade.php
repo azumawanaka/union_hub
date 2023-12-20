@@ -25,3 +25,15 @@
     </div>
 
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $(document).on('click', '.join-event', function(e) {
+            e.preventDefault();
+
+            window.axios.post()
+        });
+    });
+</script>
+@endpush

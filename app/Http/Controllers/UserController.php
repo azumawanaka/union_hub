@@ -68,7 +68,7 @@ class UserController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('users.id', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.id', 'like', '%' . $search['value'] . '%')
-                    ->orWhere(DB::raw("CONCAT(users.first_name, ' ', users.last_name)"), 'like', '%' . $search['value'] . '%')
+                    ->orWhere(DB::raw("CONCAT_WS(users.first_name, ' ', users.last_name)"), 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.email', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.address', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.mobile', 'like', '%' . $search['value'] . '%')
