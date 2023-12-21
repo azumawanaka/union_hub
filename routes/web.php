@@ -14,25 +14,28 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes();
 
-Route::get('client/search', [\App\Http\Controllers\ClientController::class, 'search'])->name('client.search');
-Route::post('/upload-photo', [\App\Http\Controllers\UserController::class, 'uploadProfilePhoto'])->name('upload.profile-photo');
-Route::put('users/{id}/update_user', [\App\Http\Controllers\UserController::class, 'updateUser'])->name('users.update_user');
-Route::post('users/{id}/update_password', [\App\Http\Controllers\UserController::class, 'updatePassword'])->name('users.update_password');
-Route::post('/check-old-password', [\App\Http\Controllers\UserController::class, 'checkOldPassword'])->name('users.check_old_password');
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', \App\Http\Controllers\UserController::class)->except([
         'create', 'update'
     ]);
 
-    // Event Controller
+    Route::get('client/search', [\App\Http\Controllers\ClientController::class, 'search'])->name('client.search');
+    Route::post('/upload-photo', [\App\Http\Controllers\UserController::class, 'uploadProfilePhoto'])->name('upload.profile-photo');
+    Route::put('users/{id}/update_user', [\App\Http\Controllers\UserController::class, 'updateUser'])->name('users.update_user');
+    Route::post('users/{id}/update_password', [\App\Http\Controllers\UserController::class, 'updatePassword'])->name('users.update_password');
+    Route::post('/check-old-password', [\App\Http\Controllers\UserController::class, 'checkOldPassword'])->name('users.check_old_password');
+
     Route::resource('events', \App\Http\Controllers\EventController::class)->except([
         'create', 'edit', 'update'
     ]);
     Route::post('events/{id}/update_event', [\App\Http\Controllers\EventController::class, 'updateEvent'])->name('events.update_event');
     Route::post('events/all', [\App\Http\Controllers\EventController::class, 'getAllEvents'])->name('events.all');
     Route::get('events/all/json_type', [\App\Http\Controllers\EventController::class, 'getJsonTypeEvents'])->name('events.json_type_events');
+
+    Route::get('event-calendar', [\App\Http\Controllers\CalendarController::class, 'index'])->name('event-calendar.index');
+    Route::post('event-calendar', [\App\Http\Controllers\CalendarController::class, 'store'])->name('event-calendar.store');
+    Route::get('event-calendar/check-event', [\App\Http\Controllers\CalendarController::class, 'check'])->name('event-calendar.check-event');
 });
 
 Route::middleware(['admin'])->group(function () {
@@ -63,8 +66,4 @@ Route::middleware(['admin'])->group(function () {
     Route::get('clients/{id}/get_client', [\App\Http\Controllers\ClientController::class, 'getClientById'])->name('clients.info');
     Route::put('clients/{id}/update_client', [\App\Http\Controllers\ClientController::class, 'updateClient'])->name('clients.update_client');
 });
-
-Route::resource('calendar', \App\Http\Controllers\Calendar::class)->except([
-    'create', 'update',
-]);
 

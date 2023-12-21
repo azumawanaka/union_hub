@@ -61,11 +61,67 @@
     <script src="{{ asset('assets/js/gleek.js') }}"></script>
     <script src="{{ asset('assets/js/styleSwitcher.js') }}"></script>
 
+    <link href="{{ asset('assets/plugins/toastr/css/toastr.min.css') }}" rel="stylesheet">
+
     <script src="{{ asset('assets/plugins/jqueryui/js/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/fullcalendar/js/fullcalendar.min.js') }}"></script>
 
     @vite(['resources/js/event-calendar.js'])
+
+
+    <!-- Toastr -->
+    <script src="{{ asset('assets/plugins/toastr/js/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/toastr/js/toastr.init.js') }}"></script>
+
+    <script>
+        function triggerToaster(msg) {
+            toastr.success(msg,
+                "Success",
+                {
+                    timeOut:5e3,
+                    closeButton:!0,
+                    debug:!1,
+                    newestOnTop:!0,
+                    progressBar:!0,
+                    positionClass:"toast-top-right",
+                    preventDuplicates:!0,
+                    onclick:null,
+                    showDuration:"300",
+                    hideDuration:"1000",
+                    extendedTimeOut:"1000",
+                    showEasing:"swing",
+                    hideEasing:"linear",
+                    showMethod:"fadeIn",
+                    hideMethod:"fadeOut",
+                    tapToDismiss:!1
+                }
+            )
+        }
+        function triggerErrorToaster(msg) {
+            toastr.error(msg,
+                "Error",
+                {
+                    timeOut:5e3,
+                    closeButton:!0,
+                    debug:!1,
+                    newestOnTop:!0,
+                    progressBar:!0,
+                    positionClass:"toast-top-right",
+                    preventDuplicates:!0,
+                    onclick:null,
+                    showDuration:"300",
+                    hideDuration:"1000",
+                    extendedTimeOut:"1000",
+                    showEasing:"swing",
+                    hideEasing:"linear",
+                    showMethod:"fadeIn",
+                    hideMethod:"fadeOut",
+                    tapToDismiss:!1
+                }
+            )
+        }
+    </script>
 
     @stack('scripts')
 </body>

@@ -30,9 +30,26 @@
 <script>
     $(document).ready(function() {
         $(document).on('click', '.join-event', function(e) {
-            e.preventDefault();
+            const eventRoute = $(this).attr('data-route');
+            const eventId = $(this).attr('data-event-id');
+            const csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token from meta tag
 
-            window.axios.post()
+            $.ajax({
+                url: eventRoute,
+                type: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include CSRF token in headers
+                },
+                data: JSON.stringify({event_id: eventId}),
+                success: function(response) {
+                    triggerToaster(response.message);
+                    $('#event-modal').modal('hide');
+                },
+                error: function(error) {
+                    triggerErrorToaster(error);
+                }
+            });
         });
     });
 </script>

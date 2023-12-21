@@ -44,6 +44,7 @@
                     <div class="my-3">${t.description}</div>
                     <small>Start At: ${ moment(t.start).format('YYYY-MM-DD @hh:mm a') }</small><br/>
                     <small>End At: ${ moment(t.end).format('YYYY-MM-DD @hh:mm a') }</small><br/>
+                    <small class="joined-at text-info">Joined At: </small>
                     <p>Status: <span class="badge badge-${stats}">${t.status}</span></p>
                 </div>`;
         i.append(eventInfo),
@@ -135,13 +136,36 @@
                 },
                 eventClick: function(e, t, n) {
                     o.onEventClick(e, t, n)
+                    $('.join-event').attr('data-event-id', e.id)
+
+                    const csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token from meta tag
+
+                    $('.join-event').show();
+                    $('.joined-at').html(``);
+                    $.ajax({
+                        url: `event-calendar/check-event?event_id=${e.id}`,
+                        type: 'GET',
+                        contentType: 'application/json',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken // Include CSRF token in headers
+                        },
+                        success: function(response) {
+                            if (Object.entries(response).length !== 0) {
+                                $('.join-event').hide();
+
+                                const created_at = moment(response.created_at).format('YYYY-MM-DD @h:mm a');
+                                $('.joined-at').html(`Joined At: ${created_at}`);
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
                 },
                 eventRender: function(event, element) {
                     // Customize the time format
                     var formattedStartTime = moment(event.start).format('hh:mm a');
-
-                    // Update the HTML for each event
-                    element.find('.fc-time').html(`<i class="fa fa-clock"></i> ${formattedStartTime}`);
+                    element.find('.fc-time').html(`${formattedStartTime}`);
                 }
             })
         })

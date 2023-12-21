@@ -24,7 +24,7 @@
                     </a>
                     <ul aria-expanded="false">
                         <li><a href="{{ route('events.index') }}">Events</a></li>
-                        <li><a href="{{ route('calendar.index') }}">Calendar</a></li>
+                        <li><a href="{{ route('event-calendar.index') }}">Calendar</a></li>
                     </ul>
                 </li>
                 <li>
@@ -34,7 +34,7 @@
                 </li>
             @else
                 <li>
-                    <a href="{{ route('calendar.index') }}" aria-expanded="false">
+                    <a href="{{ route('event-calendar.index') }}" aria-expanded="false">
                         <i class="fa fa-calendar menu-icon"></i><span class="nav-text">Events</span>
                     </a>
                 </li>
