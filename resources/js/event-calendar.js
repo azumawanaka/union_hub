@@ -148,6 +148,29 @@
                             'X-CSRF-TOKEN': csrfToken // Include CSRF token in headers
                         },
                         success: function(response) {
+                            let msg = '';
+                            let isAvailable = false;
+                            switch (e.status) {
+                                case 'cancelled':
+                                    msg = 'Oops! event is cancelled.';
+                                    break;
+                                case 'finished':
+                                    msg = 'Oops! event is already finished.';
+                                    break;
+                                case 'full':
+                                    msg = 'Oops! event is already full.';
+                                    break;
+                                default:
+                                    isAvailable = true;
+                                    break;
+                            }
+                            
+                            $('#event-modal .modal-footer .join-event').show();
+                            if (!isAvailable) {
+                                triggerErrorToaster(msg);
+                                $('#event-modal .modal-footer .join-event').hide();
+                            }
+
                             if (!response) {
                                 o.onEventClick(e, t, n);
                             } else {
