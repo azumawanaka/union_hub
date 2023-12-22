@@ -175,7 +175,12 @@ class EventController extends Controller
 
     public function getJsonTypeEvents(): JsonResponse
     {
-        $data = Event::get();
+        $data = Event::with([
+            'eventParticipants' => function ($query) {
+                $query->where('user_id', auth()->user()->id);
+            },
+        ])
+        ->get();
         return response()->json($data);
     }
 

@@ -44,7 +44,6 @@
                     <div class="my-3">${t.description}</div>
                     <small>Start At: ${ moment(t.start).format('YYYY-MM-DD @hh:mm a') }</small><br/>
                     <small>End At: ${ moment(t.end).format('YYYY-MM-DD @hh:mm a') }</small><br/>
-                    <small class="joined-at text-info">Joined At: </small>
                     <p>Status: <span class="badge badge-${stats}">${t.status}</span></p>
                 </div>`;
         i.append(eventInfo),
@@ -73,7 +72,7 @@
             a = [],
             o = this;
 
-        initializeEvents(t, n, o, a)
+            initializeEvents(t, n, o, a);
     },
     e.CalendarApp = new t, e.CalendarApp.Constructor = t
 
@@ -88,7 +87,6 @@
         .then(data => {
             const response = data;
             response.forEach((el, key) => {
-
                 let bg = 'default';
                 switch (el.status) {
                     case 'cancelled':
@@ -108,18 +106,19 @@
                 a.push({
                     id: el.id,
                     title: el.name,
-                    start: el.start_date,
-                    end: el.end_date,
+                    start: new Date(el.start_date),
+                    end: new Date(el.end_date),
                     description: el.description,
                     status: el.status,
                     category: el.category,
-                    className: `bg-${bg} text-white`
+                    className: `bg-${bg} text-white`,
+                    joined: el.event_participants.length > 0,
                 });
             });
 
             o.$calendarObj = o.$calendar.fullCalendar({
-                minTime: "01:00:00",
-                maxTime: "23:00:00",
+                minTime: "00:00:00",
+                maxTime: "23:59:00",
                 defaultView: "month",
                 handleWindowResize: !0,
                 height: e(window).height() - 200,
@@ -130,18 +129,17 @@
                 },
                 events: a,
                 editable: !0,
+                droppable: !0,
+                eventLimit: !0,
                 selectable: !0,
                 drop: function(t) {
                     o.onDrop(e(this), t)
                 },
                 eventClick: function(e, t, n) {
-                    o.onEventClick(e, t, n)
                     $('.join-event').attr('data-event-id', e.id)
 
                     const csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token from meta tag
 
-                    $('.join-event').show();
-                    $('.joined-at').html(``);
                     $.ajax({
                         url: `event-calendar/check-event?event_id=${e.id}`,
                         type: 'GET',
@@ -150,11 +148,10 @@
                             'X-CSRF-TOKEN': csrfToken // Include CSRF token in headers
                         },
                         success: function(response) {
-                            if (Object.entries(response).length !== 0) {
-                                $('.join-event').hide();
-
-                                const created_at = moment(response.created_at).format('YYYY-MM-DD @h:mm a');
-                                $('.joined-at').html(`Joined At: ${created_at}`);
+                            if (!response) {
+                                o.onEventClick(e, t, n);
+                            } else {
+                                triggerErrorToaster('Oops! you already joined this event.');
                             }
                         },
                         error: function(error) {
@@ -166,6 +163,14 @@
                     // Customize the time format
                     var formattedStartTime = moment(event.start).format('hh:mm a');
                     element.find('.fc-time').html(`${formattedStartTime}`);
+
+                    // Check if the event is joined and set the background color accordingly
+                    if (event.joined == 1) {
+                        element.find('.fc-time').html(`<span class="text-danger">[JOINED]</span>`);
+                        element.removeClass(function (index, className) {
+                            return (className.match(/\bbg-\S+/g) || []).join(' ');
+                        }).addClass('bg-custom');
+                    }
                 }
             })
         })

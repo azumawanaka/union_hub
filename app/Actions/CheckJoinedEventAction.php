@@ -16,6 +16,6 @@ class CheckJoinedEventAction
 
     public function execute($data)
     {
-        return $this->model->where('user_id', auth()->user()->id)->where('event_id', $data['event_id'])->first();
+        return $this->model->where('user_id', auth()->user()->id)->where('event_id', $data['event_id'])->exists();
     }
 }
