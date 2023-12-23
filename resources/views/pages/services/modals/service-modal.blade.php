@@ -7,7 +7,7 @@
             <form class="form-service" action="" method="post">
                 @csrf
 
-                @include('pages.admin.services.modals.body.fields')
+                @include('pages.services.modals.body.fields')
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-md close-modal">Close</button>

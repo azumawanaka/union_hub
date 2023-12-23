@@ -164,7 +164,7 @@
                                     isAvailable = true;
                                     break;
                             }
-                            
+
                             $('#event-modal .modal-footer .join-event').show();
                             if (!isAvailable) {
                                 triggerErrorToaster(msg);

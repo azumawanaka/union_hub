@@ -38,6 +38,11 @@
                         <i class="fa fa-calendar menu-icon"></i><span class="nav-text">Events</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('services.index') }}" aria-expanded="false">
+                        <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Services</span>
+                    </a>
+                </li>
             @endif
         </ul>
     </div>

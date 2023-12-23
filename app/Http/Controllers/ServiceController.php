@@ -26,9 +26,10 @@ class ServiceController extends Controller
         $this->getServiceCountAction = $getServiceCountAction;
     }
 
-    public function index(GetAllServiceTypesAction $getAllServiceTypesAction)
+    public function index(GetAllServiceTypesAction $getAllServiceTypesAction, int|string $limit = 12)
     {
-        return view('pages.admin.services.index', [
+        return view('pages.services.index', [
+            'services' => $this->selectServicesAction->execute()->paginate($limit),
             'serviceTypes'  => $getAllServiceTypesAction->execute(),
         ]);
     }

@@ -10,7 +10,7 @@
                     Add Service <span class="btn-icon-right"><i class="fa fa-plus"></i></span>
                 </button>
 
-                @include('pages.admin.services.modals.service-modal')
+                @include('pages.services.modals.service-modal')
 
                 <div class="table-responsive">
                     <table id="service_tbl" class="table table-striped table-bordered"></table>

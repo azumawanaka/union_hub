@@ -36,9 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('event-calendar', [\App\Http\Controllers\CalendarController::class, 'index'])->name('event-calendar.index');
     Route::post('event-calendar', [\App\Http\Controllers\CalendarController::class, 'store'])->name('event-calendar.store');
     Route::get('event-calendar/check-event', [\App\Http\Controllers\CalendarController::class, 'check'])->name('event-calendar.check-event');
-});
 
-Route::middleware(['admin'])->group(function () {
     // Service Controller
     Route::resource('services', \App\Http\Controllers\ServiceController::class)->except([
         'create', 'edit', 'show', 'update'
@@ -46,6 +44,9 @@ Route::middleware(['admin'])->group(function () {
     Route::get('services/{id}/get_service', [\App\Http\Controllers\ServiceController::class, 'getServiceById'])->name('services.info');
     Route::post('services/all', [\App\Http\Controllers\ServiceController::class, 'getAllServices'])->name('services.all');
     Route::post('services/{id}/update_service', [\App\Http\Controllers\ServiceController::class, 'updateService'])->name('services.update_service');
+});
+
+Route::middleware(['admin'])->group(function () {
 
     // Service Request Controller
     Route::resource('service_requests', \App\Http\Controllers\ServiceRequestController::class)->except([

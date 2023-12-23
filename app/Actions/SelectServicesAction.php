@@ -22,8 +22,10 @@ class SelectServicesAction
                 'title',
                 'description',
                 'clients.name as c_name',
+                'services.service_type_id as service_type_id',
                 'service_types.name as s_name',
-                'services.created_at as added_at'
+                'services.created_at as added_at',
+                'services.updated_at as updated_at'
             )
             ->leftJoin('service_types', 'services.service_type_id', '=', 'service_types.id')
             ->leftJoin('clients','services.client_id', '=', 'clients.id');
