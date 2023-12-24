@@ -16,7 +16,7 @@
                         <small class="text-muted">{{ $service->updated_at->diffForHumans() }}</small>
                     </p>
                     <button type="button"
-                        class="card-link float-right btn btn-info btn-sm show-details"><small>Show Details</small>
+                        class="card-link float-right btn btn-info btn-sm show-details" data-url="{{ route('services.info', $service->s_id) }}"><small>Show Details</small>
                     </button>
                 </div>
             </div>
@@ -34,14 +34,74 @@
             $(document).on('click', '.show-details', function (e) {
                 e.preventDefault();
 
-                $('#serviceDetailsModal').modal('show');
-            })
+                const url = $(this).attr('data-url');
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        $('#serviceDetailsModal').modal('show');
+
+                        $('#serviceDetailsModal').find('.modal-title').text(response.title);
+                        $('#serviceDetailsModal').find('.modal-body').html(`${response.description} </br></br>
+                            <strong class="badge badge-info">Rate: Php ${formatCurrency(response.rate)}</strong>`);
+                        $('#avail_service').attr('data-service', response.s_id);
+                    },
+                    error: function(error) {
+                        $('#serviceDetailsModal').modal('hide');
+                        console.log(error.responseJSON.errors);
+                    }
+                });
+            });
 
             $(document).on('click', '.close-modal', function (e) {
                 e.preventDefault();
 
                 $('#serviceDetailsModal').modal('hide');
-            })
+            });
+
+            $(document).on('click', '#avail_service', function (e) {
+                e.preventDefault();
+                const service_id = $(this).attr('data-service');
+
+                $.ajax({
+                    url: '',
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        $('#serviceDetailsModal').modal('show');
+
+                        $('#serviceDetailsModal').find('.modal-title').text(response.title);
+                        $('#serviceDetailsModal').find('.modal-body').html(`${response.description} </br></br>
+                            <strong class="badge badge-info">Rate: Php ${formatCurrency(response.rate)}</strong>`);
+                        $('#avail_service').attr('data-service', response.s_id);
+                    },
+                    error: function(error) {
+                        $('#serviceDetailsModal').modal('hide');
+                        console.log(error.responseJSON.errors);
+                    }
+                })
+            });
+
+            function formatCurrency(number) {
+                // Convert the number to a string
+                const numString = number.toString();
+
+                // Split the string into parts before and after the decimal point (if any)
+                const parts = numString.split('.');
+
+                // Add commas to the integer part of the number
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ', ');
+
+                // Join the parts back together and return the formatted string
+                return parts.join('.');
+            }
         });
     </script>
 

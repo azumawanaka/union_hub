@@ -97,6 +97,12 @@ class ServiceRequestController extends Controller
         return response()->json($this->responseMsg('Status was successfully '.$request->status, 'success'));
     }
 
+    public function avail(Request $request)
+    {
+        $this->
+        return response()->json($this->responseMsg('You have successfully avail the service'.$request->service_name, 'success'));
+    }
+
     /**
      * @param string $id
      * @param DeleteServiceRequestAction $deleteServiceRequestAction

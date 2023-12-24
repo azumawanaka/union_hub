@@ -25,7 +25,6 @@ class ServiceRequest extends Model
     protected $fillable = [
         'user_id',
         'service_id',
-        'budget',
         'preferred_date',
         'preferred_time',
         'location',
