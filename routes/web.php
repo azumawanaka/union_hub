@@ -44,6 +44,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('services/{id}/get_service', [\App\Http\Controllers\ServiceController::class, 'getServiceById'])->name('services.info');
     Route::post('services/all', [\App\Http\Controllers\ServiceController::class, 'getAllServices'])->name('services.all');
     Route::post('services/{id}/update_service', [\App\Http\Controllers\ServiceController::class, 'updateService'])->name('services.update_service');
+
+    Route::post('service_requests/avail', [\App\Http\Controllers\ServiceRequestController::class, 'avail'])->name('services.avail');
+    Route::post('service_requests/{id}/cancel', [\App\Http\Controllers\ServiceRequestController::class, 'cancel'])->name('service_requests.cancel');
 });
 
 Route::middleware(['admin'])->group(function () {

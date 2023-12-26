@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Models\ServiceRequest;
+use Carbon\Carbon;
 
 class UpdateServiceRequestStatusAction
 {
@@ -17,6 +18,7 @@ class UpdateServiceRequestStatusAction
     {
         return $this->model->find($id)->update([
             'status' => $status,
+            'status_updated_at' => Carbon::now()->toDateTimeString(),
         ]);
     }
 }

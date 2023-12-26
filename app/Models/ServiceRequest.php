@@ -25,11 +25,11 @@ class ServiceRequest extends Model
     protected $fillable = [
         'user_id',
         'service_id',
-        'preferred_date',
-        'preferred_time',
+        'preferred_date_time',
         'location',
         'status',
         'details',
+        'status_updated_at',
     ];
 
     public function service(): BelongsTo

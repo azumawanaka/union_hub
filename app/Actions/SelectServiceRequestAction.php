@@ -19,9 +19,7 @@ class SelectServiceRequestAction
             ->select(
                 'service_requests.id as sr_id',
                 'services.title as s_name',
-                'budget',
-                'preferred_date',
-                'preferred_time',
+                'preferred_date_time',
                 'location',
                 'users.first_name as u_name',
                 'service_requests.status as sr_status',

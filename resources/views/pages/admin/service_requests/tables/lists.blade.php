@@ -33,11 +33,9 @@
                     },
                 },
                 columns: [
-                    { data: 'sr_id', name: 'service_requests.id', title: 'ID' },
+                    { data: 'sr_id', name: 'sr_id', title: 'ID' },
                     { data: 's_name', name: 'services.title', title: 'Service Type' },
-                    { data: 'budget', name: 'budget', title: 'Budget' },
-                    { data: 'preferred_date', name: 'preferred_date', title: 'Preferred Date' },
-                    { data: 'preferred_time', name: 'preferred_time', title: 'Preferred Time' },
+                    { data: 'preferred_date_time', name: 'preferred_date_time', title: 'Preferred Date & Time' },
                     { data: 'location', name: 'location', title: 'Location' },
                     { data: 'u_name', name: 'users.first_name', title: 'User' },
                     {

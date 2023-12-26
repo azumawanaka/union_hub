@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Models\ServiceRequest;
+use Carbon\Carbon;
 
 class AvailServiceAction
 {
@@ -13,10 +14,15 @@ class AvailServiceAction
         $this->model = $model;
     }
 
-    public function execute($id, $status)
+    public function execute($data)
     {
-        return $this->model->find($id)->update([
-            'status' => $status,
+        return $this->model->create([
+            'service_id' => $data['service_id'],
+            'preferred_date_time' => Carbon::parse($data['preferred_date_time'])->toDateTimeString(),
+            'location' => $data['location'],
+            'details' => $data['details'],
+            'user_id' => auth()->user()->id,
+            'status_updated_at' => Carbon::now()->toDateTimeString(),
         ]);
     }
 }

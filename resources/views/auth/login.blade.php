@@ -8,10 +8,12 @@
             <div class="col-xl-6">
                 <div class="form-input-content">
                     <div class="card login-form mb-0">
-                        <img src="{{ asset('assets/images/logo.png') }}" width="100" class="login-logo" />
-                        <div class="card-body pt-5">
-                            <h4 class="text-center">Union Hub</h4>
-                            <form method="POST" action="{{ route('login') }}" class="mt-5 mb-5 login-input">
+                        <div class="text-center pt-3">
+                            <img src="{{ asset('assets/images/logo.png') }}" width="100" />
+                            <h4 class="text-center pt-2">Union Hub</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('login') }}" class="mb-5 login-input">
                                 @csrf
                                 <div class="form-group">
                                     <input id="email"

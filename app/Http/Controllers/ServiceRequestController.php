@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\AvailServiceAction;
+use App\Actions\CancelRequestAction;
 use App\Actions\DeleteServiceRequestAction;
 use App\Actions\GetServiceRequestCountAction;
 use App\Actions\SelectServiceRequestAction;
@@ -59,9 +61,7 @@ class ServiceRequestController extends Controller
                     ->orWhere('service_requests.id', 'like', '%' . $search['value'] . '%')
                     ->orWhere('service_requests.status', 'like', '%' . $search['value'] . '%')
                     ->orWhere('service_requests.created_at', 'like', '%' . $search['value'] . '%')
-                    ->orWhere('budget', 'like', '%' . $search['value'] . '%')
-                    ->orWhere('preferred_date', 'like', '%' . $search['value'] . '%')
-                    ->orWhere('preferred_time', 'like', '%' . $search['value'] . '%')
+                    ->orWhere('preferred_date_time', 'like', '%' . $search['value'] . '%')
                     ->orWhere('location', 'like', '%' . $search['value'] . '%')
                     ->orWhere('details', 'like', '%' . $search['value'] . '%')
                     ->orWhere('users.first_name', 'like', '%' . $search['value'] . '%')
@@ -97,10 +97,28 @@ class ServiceRequestController extends Controller
         return response()->json($this->responseMsg('Status was successfully '.$request->status, 'success'));
     }
 
-    public function avail(Request $request)
+    /**
+     * @param Request $request
+     * @param AvailServiceAction $availServiceAction
+     *
+     * @return JsonResponse
+     */
+    public function avail(Request $request, AvailServiceAction $availServiceAction): JsonResponse
     {
-        $this->
-        return response()->json($this->responseMsg('You have successfully avail the service'.$request->service_name, 'success'));
+        $availServiceAction->execute($request->all());
+        return response()->json($this->responseMsg('You have successfully avail the service.', 'success'));
+    }
+
+    /**
+     * @param string $id
+     * @param CancelRequestAction $cancelRequestAction
+     *
+     * @return JsonResponse
+     */
+    public function cancel(string $id, CancelRequestAction $cancelRequestAction): JsonResponse
+    {
+        $cancelRequestAction->execute($id);
+        return response()->json($this->responseMsg('You have successfully cancelled the service.', 'success'));
     }
 
     /**
@@ -111,7 +129,7 @@ class ServiceRequestController extends Controller
      */
     public function destroy(string $id, DeleteServiceRequestAction $deleteServiceRequestAction): JsonResponse
     {
-         $deleteServiceRequestAction->execute($id);
+        $deleteServiceRequestAction->execute($id);
         return response()->json($this->responseMsg('Request was successfully deleted.', 'success'));
     }
 

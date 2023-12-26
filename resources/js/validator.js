@@ -357,3 +357,42 @@ $.validator.addMethod("containsSpecialChar", function(value) {
 $.validator.addMethod("containsNumber", function(value) {
     return /\d/.test(value);
 }, "Password must contain at least one number");
+
+$("#service_requests_form").validate({
+    rules: {
+        "preferred_date_time": {
+            required: true,
+        },
+        "location": {
+            required: true,
+        },
+        "details": {
+            required: true,
+        },
+    },
+    messages: {
+        "preferred_date_time": {
+            required: "Please enter a your preferred date and time."
+        },
+        "location": {
+            required: "Please enter a your preferred location."
+        },
+        "details": {
+            required: "Please enter a important details about your requests."
+        },
+    },
+
+    ignore: [],
+    errorClass: "invalid-feedback animated fadeInUp",
+    errorElement: "div",
+    errorPlacement: function(e, a) {
+        jQuery(a).parents(".form-group > div").append(e)
+    },
+    highlight: function(e) {
+        jQuery(e).closest(".form-group").removeClass("is-invalid").addClass("is-invalid");
+    },
+    success: function(e) {
+        jQuery(e).closest(".form-group").removeClass("is-invalid");
+        jQuery(e).remove();
+    },
+});
