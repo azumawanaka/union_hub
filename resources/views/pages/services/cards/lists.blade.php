@@ -30,6 +30,8 @@
     @include('pages.services.modals.service-requests')
 </div>
 
+@include('pages.services.paginations.custom', ['data' => $services])
+
 @push('scripts')
     <script src="{{ asset('assets/plugins/validation/jquery.validate.min.js') }}"></script>
 
@@ -68,6 +70,9 @@
                         break;
                     case 'rejected':
                         statusHTML = '<span class="badge bg-danger text-white">Rejected</span></span>';
+                        $('.avail-btn')
+                            .removeAttr('id')
+                            .hide();
                         break;
                     default:
                         statusHTML = ''

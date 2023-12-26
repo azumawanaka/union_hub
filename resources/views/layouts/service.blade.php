@@ -16,7 +16,11 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss'])
+    @if(auth()->user()->role === 1)
+        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @else
+        @vite(['resources/sass/app.scss'])
+    @endif
 
     <!-- Custom Stylesheet -->
     <link href="{{ asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css') }}" rel="stylesheet">
@@ -25,9 +29,9 @@
     <link href="{{ asset('assets/plugins/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet">
 
     <link href="{{ asset('assets/plugins/tables/css/datatable/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/theme.css') }}" rel="stylesheet">
 
     <link href="{{ asset('assets/plugins/toastr/css/toastr.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/theme.css') }}" rel="stylesheet">
 </head>
 <body class="h-100">
 
