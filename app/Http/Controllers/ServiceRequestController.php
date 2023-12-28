@@ -17,11 +17,14 @@ class ServiceRequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(SelectServiceRequestAction $selectServiceRequestAction, int|string $limit = 10)
+    public function index(Request $request, SelectServiceRequestAction $selectServiceRequestAction, int|string $limit = 10)
     {
-        $services = $selectServiceRequestAction->execute()->orderBy('sr_created_at', 'desc')->paginate($limit);
+        $search['value'] = $request->get('q');
+        $query = $selectServiceRequestAction->execute();
+        $this->applySearchConditions($query, $search);
+
         return view('pages.admin.service_requests.index', [
-            'services' => $services,
+            'services' => $query->orderBy('sr_created_at', 'desc')->paginate($limit),
         ]);
     }
 
@@ -61,8 +64,10 @@ class ServiceRequestController extends Controller
         if (!empty($search['value'])) {
             $query->where(function ($q) use ($search) {
                 $q->where('services.title', 'like', '%' . $search['value'] . '%')
+                    ->orWhere('services.rate', 'like', '%' . $search['value'] . '%')
                     ->orWhere('service_requests.id', 'like', '%' . $search['value'] . '%')
                     ->orWhere('service_requests.status', 'like', '%' . $search['value'] . '%')
+                    ->orWhere('details', 'like', '%' . $search['value'] . '%')
                     ->orWhere('service_requests.created_at', 'like', '%' . $search['value'] . '%')
                     ->orWhere('preferred_date_time', 'like', '%' . $search['value'] . '%')
                     ->orWhere('location', 'like', '%' . $search['value'] . '%')

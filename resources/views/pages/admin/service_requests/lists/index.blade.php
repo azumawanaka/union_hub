@@ -1,6 +1,11 @@
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title">{{ $title }}</h4>
+        <div class="d-flex justify-content-between mb-4 align-items-center">
+            <h4 class="card-title">{{ $title }}</h4>
+            @include('includes.searchbar', [
+                'route' => route('service_requests.index'),
+            ])
+        </div>
         <div class="basic-list-group">
             <ul class="list-group">
                 @foreach ($data as $item)
@@ -61,6 +66,9 @@
                     </li>
                 @endforeach
             </ul>
+            @if ($data->total() === 0)
+                Empty
+            @endif
         </div>
     </div>
 </div>
@@ -108,7 +116,6 @@
                     }
                 });
             });
-
         });
     </script>
 @endpush

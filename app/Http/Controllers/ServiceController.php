@@ -26,11 +26,13 @@ class ServiceController extends Controller
         $this->getServiceCountAction = $getServiceCountAction;
     }
 
-    public function index(GetAllServiceTypesAction $getAllServiceTypesAction, int|string $limit = 8)
+    public function index(Request $request, GetAllServiceTypesAction $getAllServiceTypesAction, int|string $limit = 8)
     {
-        $services = $this->selectServicesAction->execute()->paginate($limit);
+        $search['value'] = $request->get('q');
+        $query = $this->selectServicesAction->execute();
+        $this->applySearchConditions($query, $search);
         return view('pages.services.index', [
-            'services' => $services,
+            'services' => $query->orderBy('updated_at', 'desc')->paginate($limit),
             'serviceTypes'  => $getAllServiceTypesAction->execute(),
         ]);
     }

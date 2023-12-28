@@ -1,3 +1,9 @@
+<div class="d-flex justify-content-between mb-4 align-items-center">
+    <h4 class="card-title">Services</h4>
+    @include('includes.searchbar', [
+        'route' => route('services.index'),
+    ])
+</div>
 <div class="row g-2">
     @foreach ($services as $service)
         <div class="col-xl-3 col-md-4">
@@ -25,6 +31,10 @@
             </div>
         </div>
     @endforeach
+
+    @if ($services->total() === 0)
+    <div class="col-md-12"> Empty </div>
+    @endif
 
     @include('pages.services.modals.service-details')
     @include('pages.services.modals.service-requests')
