@@ -8,9 +8,19 @@
             <p>Are you sure you want to delete this item?</p>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-default close-modal" data-bs-dismiss="modal">Cancel</button>
             <button type="button" class="btn btn-danger confirm-delete">Delete</button>
         </div>
       </div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $(document).on('click', '.close-modal', function(e) {
+                $('#deleteConfirmationModal').modal('hide');
+            });
+        });
+    </script>
+@endpush

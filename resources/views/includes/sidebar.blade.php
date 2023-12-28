@@ -13,7 +13,7 @@
                         <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Services</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="{{ route('services.index') }}">Lists</a></li>
+                        <li><a href="{{ route('services.index') }}">Services</a></li>
                         <li><a href="{{ route('service_requests.index') }}">Requests</a></li>
                         <li><a href="{{ route('clients.index') }}">Clients</a></li>
                     </ul>
@@ -43,7 +43,8 @@
                         <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Services</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="{{ route('services.index') }}">Lists</a></li>
+                        <li><a href="{{ route('services.index') }}">Services</a></li>
+                        <li><a href="{{ route('service_requests.index') }}">Requests</a></li>
                     </ul>
                 </li>
             @endif

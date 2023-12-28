@@ -148,7 +148,6 @@
                 });
             });
 
-
             let clientRoute = ''
             $(document).on('click', '#delete_client', function(e) {
                 e.preventDefault();

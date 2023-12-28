@@ -52,32 +52,6 @@
                     .attr('id', 'avail_service')
                     .text('Avail');
 
-                switch (sr_status) {
-                    case 'pending':
-                        statusHTML = '<span class="badge bg-warning text-white">Pending</span>';
-                        $('.avail-btn')
-                            .removeClass('btn-info')
-                            .addClass('btn-warning text-white')
-                            .removeAttr('id', 'avail_service')
-                            .attr('id', 'cancel_request')
-                            .text('Cancel');
-                        break;
-                    case 'approved':
-                        statusHTML = '<span class="badge bg-success text-white">Approved @ 04-20-2023 10:00:00</span>';
-                        $('.avail-btn')
-                            .removeAttr('id')
-                            .hide();
-                        break;
-                    case 'rejected':
-                        statusHTML = '<span class="badge bg-danger text-white">Rejected</span></span>';
-                        $('.avail-btn')
-                            .removeAttr('id')
-                            .hide();
-                        break;
-                    default:
-                        statusHTML = ''
-                }
-
                 if (sr_id) {
                     $('#badge-status').html(statusHTML);
                     $('#serviceDetailsModal .modal-footer').addClass('justify-content-between')

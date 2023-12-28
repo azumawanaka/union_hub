@@ -17,9 +17,12 @@ class ServiceRequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(SelectServiceRequestAction $selectServiceRequestAction, int|string $limit = 10)
     {
-        return view('pages.admin.service_requests.index');
+        $services = $selectServiceRequestAction->execute()->orderBy('sr_created_at', 'desc')->paginate($limit);
+        return view('pages.admin.service_requests.index', [
+            'services' => $services,
+        ]);
     }
 
     /**
