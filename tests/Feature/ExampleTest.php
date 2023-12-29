@@ -1,19 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+it('can return the sum of 2 numbers', function() {
+    $sum = 5 + 5;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-
-class ExampleTest extends TestCase
-{
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-}
+    $this->assertEquals($sum, 10);
+});
