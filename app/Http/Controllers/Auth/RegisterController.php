@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\CreateNotificationAction;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
@@ -37,7 +38,7 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(private CreateNotificationAction $createNotificationAction)
     {
         $this->middleware('guest');
     }
@@ -65,10 +66,18 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'first_name' => $data['first_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        if ($user) {
+            $messageKey = 'user.new';
+            $message = trans("notifications.$messageKey", ['user' => $user->first_name]);
+            $this->createNotificationAction->execute($message);
+        }
+
+        return $user;
     }
 }

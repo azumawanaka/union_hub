@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Actions\AvailServiceAction;
 use App\Actions\CancelRequestAction;
+use App\Actions\CreateNotificationAction;
 use App\Actions\DeleteServiceRequestAction;
+use App\Actions\GetServiceRequestByIdAction;
 use App\Actions\GetServiceRequestCountAction;
 use App\Actions\SelectServiceRequestAction;
 use App\Actions\UpdateServiceRequestStatusAction;
@@ -99,9 +101,22 @@ class ServiceRequestController extends Controller
     public function updateStatus(
         string $id,
         Request $request,
-        UpdateServiceRequestStatusAction $updateServiceRequestStatusAction
+        UpdateServiceRequestStatusAction $updateServiceRequestStatusAction,
+        CreateNotificationAction $createNotificationAction,
+        GetServiceRequestByIdAction $getServiceRequestByIdAction
     ): JsonResponse {
         $updateServiceRequestStatusAction->execute($id, $request->status);
+
+        $messageKey = 'service.status';
+        $user = $getServiceRequestByIdAction->execute($id)->user;
+        $to = $user->id;
+        $title = $getServiceRequestByIdAction->execute($id)->service->title;
+        $message = trans("notifications.$messageKey", [
+            'service' => $title,
+            'status' => $request->status,
+        ]);
+        $createNotificationAction->execute($message, $to);
+
         return response()->json($this->responseMsg('Status was successfully '.$request->status, 'success'));
     }
 
@@ -111,9 +126,23 @@ class ServiceRequestController extends Controller
      *
      * @return JsonResponse
      */
-    public function avail(Request $request, AvailServiceAction $availServiceAction): JsonResponse
-    {
+    public function avail(
+        Request $request,
+        AvailServiceAction $availServiceAction,
+        CreateNotificationAction $createNotificationAction,
+        GetServiceRequestByIdAction $getServiceRequestByIdAction
+    ): JsonResponse {
         $availServiceAction->execute($request->all());
+
+        $messageKey = 'service.availed';
+        $user = $getServiceRequestByIdAction->execute($request->service_id)->user;
+        $title = $getServiceRequestByIdAction->execute($request->service_id)->service->title;
+        $message = trans("notifications.$messageKey", [
+            'user' => $user->first_name,
+            'service' => $title,
+        ]);
+        $createNotificationAction->execute($message);
+
         return response()->json($this->responseMsg('You have successfully avail the service.', 'success'));
     }
 

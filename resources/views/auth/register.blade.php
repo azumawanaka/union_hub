@@ -74,6 +74,7 @@
                                 </div>
                                 <button type="submit" class="btn login-form__btn submit w-100 text-white">{{ __('Register') }}</button>
                             </form>
+                            <p class="mt-5 login-form__footer">Already have account? <a href="{{ route('login') }}" class="text-primary">Sign In</a> now</p>
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CheckJoinedEventAction;
+use App\Actions\CreateNotificationAction;
 use App\Actions\JoinEventAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,10 +24,19 @@ class CalendarController extends Controller
      *
      * @return JsonResponse
      */
-    public function store(Request $request, JoinEventAction $joinEventAction): JsonResponse
+    public function store(Request $request, JoinEventAction $joinEventAction, CreateNotificationAction $createNotificationAction): JsonResponse
     {
         try {
-            $joinEventAction->execute($request->all());
+
+            $event = $joinEventAction->execute($request->all());
+
+            $messageKey = 'event.joined';
+            $message = trans("notifications.$messageKey", [
+                'user' => auth()->user()->first_name,
+                'event' => $event->name,
+            ]);
+            $createNotificationAction->execute($message);
+
             return response()->json($this->responseMsg('You successfully joined the event.', 'success'));
         } catch (\Throwable $th) {
             return response()->json($this->responseMsg($th->getMessage(), 'error'));
