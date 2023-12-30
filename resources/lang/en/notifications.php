@@ -13,5 +13,6 @@ return [
         'new' => 'A new service :service was added.',
         'status' => 'Your requested service :service was :status',
         'availed' => 'User :user just availed the service :service',
+        'cancelled' => 'User :user just cancelled the service :service',
     ],
 ];

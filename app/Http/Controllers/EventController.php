@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreateNotificationAction;
 use App\Actions\DeleteEventAction;
 use App\Actions\GetEventAction;
 use App\Actions\GetEventCountAction;
+use App\Actions\GetServiceRequestByIdAction;
 use App\Actions\SelectEventAction;
 use App\Actions\StoreEventAction;
 use App\Actions\UpdateEventAction;
@@ -85,8 +87,11 @@ class EventController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, StoreEventAction $storeEventAction)
-    {
+    public function store(
+        Request $request,
+        StoreEventAction $storeEventAction,
+        CreateNotificationAction $createNotificationAction
+    ) {
         $dateRange = $request->input('start_end_date');
         $splitDates = explode(' - ', $dateRange);
         $startDate = $this->convertDateTimeFormat(trim($splitDates[0]));
@@ -106,6 +111,13 @@ class EventController extends Controller
 
             $key = 'success';
             $msg = 'Event was successfully added.';
+
+            $messageKey = 'event.new';
+            $message = trans("notifications.$messageKey", [
+                'event' => $request->input('name'),
+            ]);
+            $createNotificationAction->execute($message);
+
         } catch (\Throwable $th) {
             $key = 'error';
             $msg = 'Exception thrown during store event: ' . $th->getMessage();
@@ -113,8 +125,12 @@ class EventController extends Controller
         return redirect()->back()->with($key, $msg);
     }
 
-    public function updateEvent(string $id, Request $request, UpdateEventAction $updateEventAction)
-    {
+    public function updateEvent(
+        string $id,
+        Request $request,
+        UpdateEventAction $updateEventAction,
+        CreateNotificationAction $createNotificationAction
+    ) {
         $dateRange = $request->input('start_end_date');
         $splitDates = explode(' - ', $dateRange);
         $startDate = $this->convertDateTimeFormat(trim($splitDates[0]));
@@ -135,6 +151,14 @@ class EventController extends Controller
 
             $key = 'info';
             $msg = 'Event was successfully updated.';
+
+            $messageKey = 'event.status';
+            $message = trans("notifications.$messageKey", [
+                'event' => $request->input('name'),
+                'status' => $request->input('status'),
+            ]);
+            $isFromUser = false;
+            $createNotificationAction->execute($message, null, $isFromUser);
         } catch (\Throwable $th) {
             $key = 'error';
             $msg = 'Exception thrown during update event: ' . $th->getMessage();

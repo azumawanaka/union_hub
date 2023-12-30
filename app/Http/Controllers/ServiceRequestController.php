@@ -152,9 +152,22 @@ class ServiceRequestController extends Controller
      *
      * @return JsonResponse
      */
-    public function cancel(string $id, CancelRequestAction $cancelRequestAction): JsonResponse
-    {
+    public function cancel(
+        string $id,
+        CancelRequestAction $cancelRequestAction,
+        CreateNotificationAction $createNotificationAction,
+        GetServiceRequestByIdAction $getServiceRequestByIdAction
+    ): JsonResponse {
         $cancelRequestAction->execute($id);
+
+        // $messageKey = 'service.cancelled';
+        // $title = $getServiceRequestByIdAction->execute($id)->service->title;
+        // $message = trans("notifications.$messageKey", [
+        //     'service' => $title,
+        //     'user' => auth()->user()->first_name,
+        // ]);
+        // $createNotificationAction->execute($message);
+
         return response()->json($this->responseMsg('You have successfully cancelled the service.', 'success'));
     }
 

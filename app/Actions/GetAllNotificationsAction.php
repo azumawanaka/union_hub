@@ -18,12 +18,11 @@ class GetAllNotificationsAction
         $isUser = auth()->user()->role === 0;
         if (!$isUser) {
             $query = $this->model->query()
-                ->where('is_from_user', !$isUser)
-                ->whereNull('to');
+                ->where('to', null);
         } else {
             $query = $this->model->query()
-                ->where('is_from_user', $isUser)
-                ->where('to', auth()->user()->id);
+                ->where('is_from_user', false)
+                ->orWhere('to', auth()->user()->id);
         }
 
         return $query->orderBy('created_at', 'desc')->get();

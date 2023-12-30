@@ -13,11 +13,12 @@ class CreateNotificationAction
         $this->model = $model;
     }
 
-    public function execute(string $msg, $to = null)
+    public function execute(string $msg, $to = null, $isFromuser = true)
     {
         return $this->model->create([
             'message' => $msg,
             'to' => $to,
+            'is_from_user' => $isFromuser,
         ]);
     }
 }
