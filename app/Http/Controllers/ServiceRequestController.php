@@ -132,11 +132,11 @@ class ServiceRequestController extends Controller
         CreateNotificationAction $createNotificationAction,
         GetServiceRequestByIdAction $getServiceRequestByIdAction
     ): JsonResponse {
-        $availServiceAction->execute($request->all());
+        $service = $availServiceAction->execute($request->all());
 
         $messageKey = 'service.availed';
-        $user = $getServiceRequestByIdAction->execute($request->service_id)->user;
-        $title = $getServiceRequestByIdAction->execute($request->service_id)->service->title;
+        $user = $getServiceRequestByIdAction->execute($service->id)->user;
+        $title = $getServiceRequestByIdAction->execute($service->id)->service->title;
         $message = trans("notifications.$messageKey", [
             'user' => $user->first_name,
             'service' => $title,

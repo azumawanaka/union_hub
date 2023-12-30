@@ -73,7 +73,9 @@
                 timePickerSeconds: false,
                 buttonClasses: ['btn', 'btn-sm'],
                 applyClass: 'btn-danger',
-                cancelClass: 'btn-inverse'
+                cancelClass: 'btn-inverse',
+                startDate: moment(),
+                endDate: moment(),
             });
 
             // Set the initial date range

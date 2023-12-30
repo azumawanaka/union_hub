@@ -23,6 +23,7 @@ class StoreEventAction
             'category' => $data['category'],
             'max_participants' => $data['max_participants'],
             'color' => $data['color'],
+            'status' => 'ongoing',
         ]);
     }
 }
