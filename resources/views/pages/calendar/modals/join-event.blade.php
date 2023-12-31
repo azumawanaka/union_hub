@@ -7,7 +7,7 @@
             </div>
             <div class="modal-body"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default waves-effect close-btn" data-dismiss="modal">Close</button>
                 @if (auth()->user()->role === 0)
                     <button type="button" class="btn btn-info join-event waves-effect waves-light" data-route="{{ route('event-calendar.store') }}">Join</button>
                 @endif
