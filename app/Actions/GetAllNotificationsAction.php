@@ -25,6 +25,6 @@ class GetAllNotificationsAction
                 ->orWhere('to', auth()->user()->id);
         }
 
-        return $query->orderBy('created_at', 'desc')->get();
+        return $query->orderBy('updated_at', 'desc');
     }
 }

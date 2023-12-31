@@ -23,7 +23,9 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer(['layouts.app', 'layouts.calendar', 'layouts.dashboard', 'layouts.event', 'layouts.service', 'layouts.user'], function ($view) {
             $notifications = app(GetAllNotificationsAction::class)->execute();
-            $view->with('notifications', $notifications);
+            $view->with([
+                'notifications' => $notifications,
+            ]);
         });
     }
 }

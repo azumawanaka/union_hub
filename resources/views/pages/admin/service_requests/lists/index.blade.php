@@ -56,6 +56,7 @@
                                     <button type="button"
                                         class="btn btn-sm btn-danger"
                                         id="delete_request"
+                                        data-sr-id="{{ $item->sr_id }}"
                                         data-href="{{ route('service_requests.cancel', $item->sr_id) }}">Delete</button>
                                 @endif
                                 @if ($item->sr_status === 'approved')
@@ -88,10 +89,12 @@
                 $('#serviceRequestsModal').modal('show');
             });
 
-            let clientRoute = ''
+            let clientRoute = '';
+            let sr_id;
             $(document).on('click', '#delete_request', function(e) {
                 e.preventDefault();
                 clientRoute = $(this).attr('data-href');
+                sr_id = $(this).attr('data-sr-id');
                 $('#deleteConfirmationModal').modal('show');
             });
 
@@ -99,7 +102,7 @@
                 e.preventDefault();
 
                 $.ajax({
-                    url: clientRoute,
+                    url: `service_requests/${sr_id}/cancel`,
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

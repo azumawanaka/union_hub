@@ -2,30 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\DeleteNotificationAction;
+use App\Actions\GetAllNotificationsAction;
 use App\Models\Notification;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    public function index()
+    public function index(Request $request, GetAllNotificationsAction $getAllNotificationsAction, int|string $limit = 5)
     {
-        $notifications = Notification::orderBy('created_at', 'desc')->get();
-
-        return view('notifications.index', compact('notifications'));
+        return view('pages.notifications.index', [
+            'notifications' => $getAllNotificationsAction->execute()->paginate($limit),
+        ]);
     }
 
-    public function create($message)
+    public function remove(int|string $notifId, DeleteNotificationAction $deleteNotificationAction): JsonResponse
     {
-        Notification::create(['message' => $message]);
-
-        return response()->json(['message' => 'Notification created successfully']);
-    }
-
-    public function markAsRead($id)
-    {
-        $notification = Notification::findOrFail($id);
-        $notification->update(['read' => true]);
-
-        return response()->json(['message' => 'Notification marked as read']);
+        $deleteNotificationAction->execute($notifId);
+        return response()->json(['message' => 'Notification was successfully removed.']);
     }
 }

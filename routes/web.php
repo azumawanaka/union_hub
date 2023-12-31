@@ -53,6 +53,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('service_requests/all', [\App\Http\Controllers\ServiceRequestController::class, 'getAllServiceRequests'])->name('service_requests.all');
     Route::post('service_requests/avail', [\App\Http\Controllers\ServiceRequestController::class, 'avail'])->name('services.avail');
     Route::post('service_requests/{id}/cancel', [\App\Http\Controllers\ServiceRequestController::class, 'cancel'])->name('service_requests.cancel');
+
+    Route::get('notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/{id}/remove', [\App\Http\Controllers\NotificationController::class, 'remove'])->name('notifications.remove');
 });
 
 Route::middleware(['admin'])->group(function () {

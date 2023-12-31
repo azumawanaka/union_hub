@@ -102,3 +102,22 @@
 .notification-heading {
     font-size: 12px!important;
 }
+
+.page-item.active .page-link {
+    z-index: 0!important;
+}
+
+.media .icon {
+    font-size: 2rem;
+    margin-right: 20px;
+}
+
+.notif-delete-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+    &:hover {
+        color: rgb(185, 42, 42);
+    }
+}
