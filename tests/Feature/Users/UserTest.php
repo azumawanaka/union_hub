@@ -1,21 +1,19 @@
 <?php
 
-const TEST_EMAIL = 'filjumar@test.com';
+const TEST_EMAIL = 'admin@test.com';
 
-it('can_create_new_user', function() {
-    $user = createUser([
+beforeEach(function () {
+    $this->user = createUser([
         'email' => TEST_EMAIL,
     ]);
-
-    expect($user)->toBeObject($user);
-    expect($user->email)->toBe(TEST_EMAIL);
 });
 
-it('cannot_create_new_user_if_already_exists', function() {
-    $existingUser = createUser([
-        'email' => TEST_EMAIL,
-    ]);
+it('can_register_new_user', function() {
+    expect($this->user)->toBeObject($this->user);
+    expect($this->user->email)->toBe(TEST_EMAIL);
+});
 
+it('cannot_register_new_user_if_already_exists', function() {
     try {
         // Attempt to create a new user with the same email
         createUser([
@@ -29,6 +27,6 @@ it('cannot_create_new_user_if_already_exists', function() {
         expect($exception->getMessage())->toContain('UNIQUE constraint');
     } finally {
         // Clean up: Delete the existing user
-        $existingUser->delete();
+        $this->user->delete();
     }
 });

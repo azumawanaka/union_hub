@@ -26,6 +26,7 @@ class UserRequest extends FormRequest
     {
         $rules = [
             'first_name' => 'required',
+            'password' => 'required',
         ];
         if (empty($this->input('u'))) {
             $rules['email'] = [
