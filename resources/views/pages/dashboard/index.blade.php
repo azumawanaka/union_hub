@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('pages.dashboard.includes.cards')
+    {{-- @include('pages.dashboard.includes.cards')
 
     <div class="row">
         <div class="col-md-6">
@@ -16,6 +16,6 @@
                 @include('pages.dashboard.includes.services')
             @endif
         </div>
-    </div>
+    </div> --}}
 
 @endsection
