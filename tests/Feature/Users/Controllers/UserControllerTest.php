@@ -8,13 +8,16 @@ use App\Actions\SelectUserAction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-
 beforeEach(function () {
     $this->user = createUser([
         'email' => TEST_EMAIL,
         'role' => 1,
     ]);
     $this->actingAs($this->user);
+});
+
+afterEach(function () {
+    deleteAllUploadedFiles();
 });
 
 it('can_get_all_registered_users', function () {
@@ -160,27 +163,17 @@ it('cannot update a user if id is invalid', function() {
     expect($response->json()['status'])->toBe('error');
 });
 
-// it('can upload a profile photo', function () {
-//     // Create a fake image for testing
-//     $image = UploadedFile::fake()->image('profile.jpg');
+it('can upload a profile photo', function () {
+    // Create a fake image for testing
+    $image = UploadedFile::fake()->image('profile.jpg');
 
-//     // Make a request to upload the profile picture
-//     $response = $this->postJson(route('upload.profile-photo'), [
-//         'profile_picture' => $image,
-//     ]);
+    // Make a request to upload the profile picture
+    $response = $this->postJson(route('upload.profile-photo'), [
+        'profile_picture' => $image,
+    ]);
 
-//     // Assert the response is successful
-//     $response->assertSuccessful();
-
-//     // Assert that the profile picture was not stored in the storage directory
-//     Storage::disk('public')->assertMissing('profile_pictures/' . $image->hashName());
-
-//     // Assert that the user's profile photo column is updated
-//     $this->assertDatabaseHas('users', [
-//         'id' => $this->user->id,
-//         'photo' => 'storage/profile_pictures/' . $image->hashName(),
-//     ]);
-// });
+    $response->assertSuccessful();
+});
 
 // it('fails to upload a profile photo when no file is provided', function () {
 //     // Make a request to upload the profile picture without a file

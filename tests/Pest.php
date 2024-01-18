@@ -1,7 +1,7 @@
 <?php
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,4 +49,12 @@ expect()->extend('toBeOne', function () {
 function createUser(array $data = []): User
 {
     return User::factory()->create($data);
+}
+
+function deleteAllUploadedFiles()
+{
+    $files = Storage::disk('public')->files('profile_pictures');
+    foreach ($files as $file) {
+        Storage::disk('public')->delete($file);
+    }
 }
