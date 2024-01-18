@@ -1,5 +1,7 @@
 <?php
-use App\Actions\GetUserAction;
+use App\Actions\UpdateProfilePhotoAction;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Http\Controllers\UserController;
 use App\Actions\SelectUserAction;
@@ -49,18 +51,19 @@ it('can_get_all_registered_users', function () {
     // Additional assertions based on the actual structure of your 'data'
     // For example, you might want to check the count of items in 'data'
     expect($responseData['data'])->toHaveCount(10);
-
     expect($response->status())->toBe(200);
 });
 
-it('can_get_user_by_id', function() {
-    $getUserAction = app(GetUserAction::class);
+it('can get user by id', function() {
+    $response = $this->get(route('users.info', $this->user->id));
 
-    $controller = new UserController();
-    $response = $controller->getUserById($this->user->id, $getUserAction);
-    $responseData = json_decode($response->getContent(), true);
+    expect($response->json())->toBeArray();
+    expect($response->json()['id'])->toBe($this->user->id);
+});
 
-    expect($responseData['id'])->toBe($this->user->id);
+it('cannot get user with un-existing id', function() {
+    $response = $this->get(route('users.info', 'unidentified-id'));
+    expect($response->json())->toBeEmpty();
 });
 
 it('can store user with valid requests', function () {
@@ -111,12 +114,10 @@ it('cannot store user if email already exists', function () {
         'password' => Hash::make('password'),
     ];
 
-    $response = $this->post(route('users.store'), array_merge($payloads, [
+    User::factory()->create(array_merge($payloads, [
         'first_name' => 'Jade Orpheus',
         'email' => 'jade@test.net',
     ]));
-
-    $response->assertSessionDoesntHaveErrors();
 
     $response = $this->post(route('users.store'), array_merge($payloads, [
         'first_name' => 'Filjumar',
@@ -128,3 +129,63 @@ it('cannot store user if email already exists', function () {
     expect(session('errors')->getBag('default')->first('email'))
         ->toBe('The email has already been taken.');
 });
+
+it('can update a user with valid requests', function() {
+    $payloads = [
+        'u' => $this->user->id,
+        'first_name' => 'Updated value',
+        'last_name' => $this->user->last_name,
+        'address' => $this->user->address,
+        'mobile' => null,
+        'gender' => 'male',
+    ];
+
+    $response = $this->put(route('users.update_user', $this->user->id), $payloads);
+
+    expect($response->json()['status'])->toBe('success');
+    expect($response->json()['message'])->toBe('User was successfully updated.');
+});
+
+it('cannot update a user if id is invalid', function() {
+    $payloads = [
+        'u' => $this->user->id,
+        'first_name' => 'Updated value',
+        'last_name' => $this->user->last_name,
+        'address' => $this->user->address,
+        'mobile' => null,
+        'gender' => 'male',
+    ];
+
+    $response = $this->put(route('users.update_user', 'invalid-id'), $payloads);
+    expect($response->json()['status'])->toBe('error');
+});
+
+// it('can upload a profile photo', function () {
+//     // Create a fake image for testing
+//     $image = UploadedFile::fake()->image('profile.jpg');
+
+//     // Make a request to upload the profile picture
+//     $response = $this->postJson(route('upload.profile-photo'), [
+//         'profile_picture' => $image,
+//     ]);
+
+//     // Assert the response is successful
+//     $response->assertSuccessful();
+
+//     // Assert that the profile picture was not stored in the storage directory
+//     Storage::disk('public')->assertMissing('profile_pictures/' . $image->hashName());
+
+//     // Assert that the user's profile photo column is updated
+//     $this->assertDatabaseHas('users', [
+//         'id' => $this->user->id,
+//         'photo' => 'storage/profile_pictures/' . $image->hashName(),
+//     ]);
+// });
+
+// it('fails to upload a profile photo when no file is provided', function () {
+//     // Make a request to upload the profile picture without a file
+//     $response = $this->postJson(route('upload.profile-photo'), []);
+
+//     // Assert the response indicates failure
+//     $response->assertJson(['message' => 'Failed to upload image.']);
+// });
