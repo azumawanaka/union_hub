@@ -1,20 +1,16 @@
 <?php
 use App\Actions\GetUserAction;
-use App\Actions\StoreUserAction;
-use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Http\Controllers\UserController;
 use App\Actions\SelectUserAction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Session;
 
 
 beforeEach(function () {
     $this->user = createUser([
         'email' => TEST_EMAIL,
+        'role' => 1,
     ]);
     $this->actingAs($this->user);
 });
@@ -68,50 +64,67 @@ it('can_get_user_by_id', function() {
 });
 
 it('can store user with valid requests', function () {
-    $requests = [
+    $payloads = [
+        'first_name' => 'Jade Orpheus',
+        'last_name' => 'Jumamoy',
+        'mobile' => null,
+        'email' => 'jade@test.net',
+        'password' => Hash::make('password'),
+    ];
+
+    $response = $this->post(route('register'), $payloads);
+
+    $response
+        ->assertStatus(302)
+        ->assertRedirect(route('dashboard'));
+
+    $responseRequest = $response->getRequest()->request;
+    expect($responseRequest)->toBeObject();
+    expect($responseRequest->all())->toMatchArray($payloads);
+});
+
+it('cannot store user with invalid email', function () {
+    $payloads = [
         'first_name' => 'Jade Orpheus',
         'last_name' => 'Jumamoy',
         'address' => 'Ilaud Inabanga Bohol',
         'mobile' => null,
         'gender' => 'male',
-        'email' => 'jade@test.net',
+        'email' => 'invalid-email-address',
         'password' => Hash::make('password'),
     ];
 
-    // $validator = Validator::make($userData, (new UserRequest())->rules());
+    $response = $this->post(route('users.store'), $payloads);
 
-    // if ($validator->fails()) {
-    //     expect(function () use ($validator) {
-    //         throw new ValidationException($validator);
-    //     })->toThrow(ValidationException::class);
-    // }
+    $response->assertSessionHasErrors('email');
 
-    // $request = new UserRequest($userData);
-
-    $controller = new UserController();
-    $storeUserAction = app(StoreUserAction::class);
-
-    // $controller->store($request, $storeUserAction);
-
-    // expect(Session::get('success'))->toBe('User was successfully added.');
-    // expect(Session::get('_flash.new'))->toBe(['success']);
+    expect(session('errors')->getBag('default')->first('email'))
+        ->toBe('The email field must be a valid email address.');
 });
 
-it('cannot_store_user_with_invalid_requests', function() {
-    $requests = [
-        'first_name' => null, //required
+it('cannot store user if email already exists', function () {
+    $payloads = [
         'last_name' => 'Jumamoy',
         'address' => 'Ilaud Inabanga Bohol',
         'mobile' => null,
         'gender' => 'male',
-        'email' => null, //required
         'password' => Hash::make('password'),
     ];
 
-    $validator = Validator::make($requests, (new UserRequest())->rules());
-    expect(function () use ($validator) {
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
-    })->toThrow(ValidationException::class);
+    $response = $this->post(route('users.store'), array_merge($payloads, [
+        'first_name' => 'Jade Orpheus',
+        'email' => 'jade@test.net',
+    ]));
+
+    $response->assertSessionDoesntHaveErrors();
+
+    $response = $this->post(route('users.store'), array_merge($payloads, [
+        'first_name' => 'Filjumar',
+        'email' => 'jade@test.net',
+    ]));
+
+    $response->assertSessionHasErrors('email');
+
+    expect(session('errors')->getBag('default')->first('email'))
+        ->toBe('The email has already been taken.');
 });
