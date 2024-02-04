@@ -76,13 +76,13 @@
                 cancelClass: 'btn-inverse',
                 startDate: moment(),
                 endDate: moment(),
+                minDate: moment(),
             });
 
             // Set the initial date range
             $('#start_end_date').on('apply.daterangepicker', function(ev, picker) {
                 const start_date = picker.startDate.format('YYYY-MM-DD HH:mm');
                 const end_date = picker.endDate.format('YYYY-MM-DD HH:mm');
-
                 $('#start_end_date').val(start_date +' - '+ end_date);
             });
         });

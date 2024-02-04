@@ -8,9 +8,9 @@
         </div>
         <div class="header-right">
             <ul class="clearfix">
-                {{-- <li class="icons dropdown">
+                <li class="icons dropdown">
                     @include('includes.header_items.notifications')
-                </li> --}}
+                </li>
                 <li class="icons dropdown">
                     @include('includes.header_items.profile_logout')
                 </li>

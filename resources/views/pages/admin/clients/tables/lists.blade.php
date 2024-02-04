@@ -2,12 +2,12 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Clients</h4>
+                <h4 class="card-title">Service Providers</h4>
                 <button type="button"
                     id="add_client"
                     class="btn mb-1 btn-info btn-xs"
                     data-href="{{ route('clients.store') }}">
-                    Add Client <span class="btn-icon-right"><i class="fa fa-plus"></i></span>
+                    Add Service Provider <span class="btn-icon-right"><i class="fa fa-plus"></i></span>
                 </button>
 
                 @include('pages.admin.clients.modals.client-modal')

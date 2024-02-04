@@ -18,7 +18,7 @@
                 @if (!$isActive)
                     <a href="{{ url($url) }}">{{ $segmentName }}</a>
                 @else
-                    {{ $segmentName }}
+                    {{ $segmentName == 'Clients' ? 'Service Providers' : $segmentName }}
                 @endif
             </li>
 

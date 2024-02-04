@@ -1,11 +1,11 @@
 <div class="nk-sidebar">
     <div class="nk-nav-scroll">
         <ul class="metismenu" id="menu">
-            {{-- <li>
+            <li>
                 <a href="{{ route('dashboard') }}" aria-expanded="false">
                     <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                 </a>
-            </li> --}}
+            </li>
 
             @if(auth()->user()->role === 1)
                 <li class="mega-menu mega-menu-sm">
@@ -15,7 +15,7 @@
                     <ul aria-expanded="false">
                         <li><a href="{{ route('services.index') }}">Services</a></li>
                         <li><a href="{{ route('service_requests.index') }}">Requests</a></li>
-                        <li><a href="{{ route('clients.index') }}">Clients</a></li>
+                        <li><a href="{{ route('clients.index') }}">Service Providers</a></li>
                     </ul>
                 </li>
                 <li class="mega-menu mega-menu-sm">
