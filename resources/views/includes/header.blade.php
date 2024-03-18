@@ -8,6 +8,9 @@
         </div>
         <div class="header-right">
             <ul class="clearfix">
+                <li class="icons">
+                    @include('includes.header_items.reports')
+                </li>
                 <li class="icons dropdown">
                     @include('includes.header_items.notifications')
                 </li>

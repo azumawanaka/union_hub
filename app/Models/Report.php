@@ -11,6 +11,20 @@ class Report extends Model
 {
     use Notifiable;
 
+    public const TYPES = [
+        'dispute_resolution' => 'Dispute Resolution (Conflicts between residents)',
+        'waste_management' => 'Waste Management (Issues related to garbage collection, disposal, etc.)',
+        'public_safety' => 'Public Safety (Concerns about crime, security, etc.)',
+        'infra_maintenance' => 'Infrastructure Maintenance (Problems with roads, drainage, or public facilities)',
+        'land_dispute' => 'Land dispute',
+        'noise_complaints' => 'Noise Complaints',
+        'water_supply' => 'Water Supply Issues',
+    ];
+
+    public const STATUS = [
+        ''
+    ];
+
     /**
      * The attributes that are mass assignable.
      *

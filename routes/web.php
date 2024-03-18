@@ -56,6 +56,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/{id}/remove', [\App\Http\Controllers\NotificationController::class, 'remove'])->name('notifications.remove');
+
+
+    Route::get('reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
 });
 
 Route::middleware(['admin'])->group(function () {

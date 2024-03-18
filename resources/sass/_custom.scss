@@ -121,3 +121,28 @@
         color: rgb(185, 42, 42);
     }
 }
+
+
+.issue-prev {
+    height: 150px;
+    padding: 10px 0;
+    box-shadow: 0 3px 5px 0px;
+    text-align: center;
+    img {
+        height: 100%;
+    }
+    .upload-btn {
+        z-index: 1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        cursor: pointer;
+        font-size: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: .2;
+    }
+}
