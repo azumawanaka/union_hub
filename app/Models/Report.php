@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -22,7 +21,22 @@ class Report extends Model
     ];
 
     public const STATUS = [
-        ''
+        'pending' => [
+            'color' => 'warning',
+            'value' => 'Pending',
+        ],
+        'ongoing' => [
+            'color' => 'info',
+            'value' => 'Ongoing',
+        ],
+        'declined' => [
+            'color' => 'danger',
+            'value' => 'Declined',
+        ],
+        'done' => [
+            'color' => 'success',
+            'value' => 'Done',
+        ],
     ];
 
     /**
@@ -33,13 +47,12 @@ class Report extends Model
     protected $fillable = [
         'user_id',
         'reported_at',
-        'title',
         'description',
         'category',
         'attached_file',
-        'resolution_time',
         'note_by_admin',
         'status',
+        'is_anonymous',
     ];
 
     public function user(): BelongsTo

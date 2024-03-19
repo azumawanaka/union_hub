@@ -3,14 +3,53 @@
 namespace App\Http\Controllers;
 
 use App\Actions\GetAllReportsAction;
+use App\Actions\StoreReportAction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ReportController extends Controller
 {
-    public function index(Request $request, GetAllReportsAction $getAllReportsAction, int|string $limit = 5)
+    public function index(Request $request, GetAllReportsAction $getAllReportsAction, int|string $limit = 10)
     {
         return view('pages.reports.index', [
             'reports' => $getAllReportsAction->execute()->paginate($limit),
         ]);
+    }
+
+    public function store(Request $request, StoreReportAction $storeReportAction)
+    {
+        try {
+            $attachedFile = '';
+            if ($request->hasFile('report_img') && $request->file('report_img')->isValid()) {
+                $file = $request->file('report_img');
+
+                // Generate a unique filename
+                $filename = uniqid('report_', true) . '.' . $file->extension();
+
+                // Store the file in the storage directory with the specified filename
+                $path = $file->storeAs('reports', $filename, 'public');
+                $attachedFile = 'storage/'.$path;
+            }
+
+            $payloads = [
+                'description' => $request->description,
+                'category' => $request->category,
+                'attached_file' => $attachedFile,
+                'is_anonymous' => !is_null($request->is_anonymous),
+            ];
+
+            $storeReportAction->execute($payloads);
+            return response()->json($this->responseMsg('Report was successfully sent.', 'success'));
+        } catch (\Throwable $th) {
+            return response()->json($this->responseMsg($th->getMessage(), 'error'));
+        }
+    }
+
+    private function responseMsg($msg, $status): array
+    {
+        return [
+            'message' => $msg,
+            'status' => $status,
+        ];
     }
 }

@@ -10,53 +10,57 @@
                     <div class="row">
                         <div class="col-xl-4 col-md-4 col-sm-3 mb-4 mb-sm-0">
                             <div class="list-group" id="list-tab" role="tablist">
-                                <a class="list-group-item list-group-item-action d-flex justify-content-between"
+                                <a class="list-group-item list-group-item-action active d-flex justify-content-between"
                                     id="form-fields-list"
                                     data-toggle="list"
                                     href="#form-fields"
                                     role="tab"
-                                    aria-controls="form-fields">Submit Report<i class="fa fa-plus"></i></a>
+                                    aria-controls="form-fields">Submit Report<i class="fa fa-paper-plane"></i></a>
 
-                                <a class="list-group-item list-group-item-action active"
-                                    id="list-home-list"
-                                    data-toggle="list"
-                                    href="#list-home"
-                                    role="tab"
-                                    aria-controls="home">This is a subject of the report A</a>
-                                <a class="list-group-item list-group-item-action"
-                                    id="list-profile-list"
-                                    data-toggle="list"
-                                    href="#list-profile"
-                                    role="tab"
-                                    aria-controls="profile">This is a subject of the reportB</a>
+                                @foreach ($reports as $report)
+                                    <a class="list-group-item list-group-item-action"
+                                        id="list-{{ $report->id }}-list"
+                                        data-toggle="list"
+                                        href="#list-{{ $report->id }}"
+                                        role="tab"
+                                        aria-controls="{{ $report->id }}">
+                                        <i class="fa fa-circle text-{{ \App\Models\Report::STATUS[$report->status]['color'] }}"></i>
+                                        {{ \Illuminate\Support\Str::limit($report->description, 80) }}
+                                    </a>
+                                @endforeach
+                                <div class="pagination">
+                                    {{ $reports->links('vendor.pagination.bootstrap-4') }}
+                                </div>
                             </div>
                         </div>
                         <div class="col-xl-8 col-md-8 col-sm-9">
                             <div class="tab-content" id="nav-tabContent">
-                                <div class="tab-pane fade show active" id="list-home">
-                                    <!-- Dropdown button -->
-                                    <div class="dropdown top-0 end-0 mt-2 text-right">
-                                        <span class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fa fa-cog"></i>
-                                        </span>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li><a class="dropdown-item" href="#">Action</a></li>
-                                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                        </ul>
-                                    </div>
+                                @foreach ($reports as $report)
+                                    <div class="tab-pane fade" id="list-{{ $report->id }}">
+                                        @if ($report->status === 'pending' || $report->status === 'declined')
+                                            <!-- Dropdown button -->
+                                            <div class="dropdown top-0 end-0 mt-2 text-right">
+                                                <span class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-cog"></i>
+                                                </span>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <li><a class="dropdown-item" href="#" id="delete_report">Delete</a></li>
+                                                    {{-- <li><a class="dropdown-item" href="#">Edit</a></li> --}}
+                                                </ul>
+                                            </div>
+                                        @endif
 
-                                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dicta minus voluptates repudiandae facilis eligendi quidem hic magnam recusandae architecto placeat, harum aliquid et corporis explicabo ipsam beatae, commodi ex quo.</p>
-                                    <div class="tab-footer">
-                                        <small class="badge badge-info">category-abc</small><br/>
-                                        <small class="text-muted">2024-03-17 01:00:00</small>
+                                        <p>{!! $report->description !!}</p>
+                                        <div class="tab-footer">
+                                            <small class="badge badge-dark">{{ \App\Models\Report::TYPES[$report->category] }}</small><br/>
+                                            <small class="text-muted">{{ $report->reported_at }}</small>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="tab-pane fade" id="list-profile" role="tabpanel">
-                                    <p>This is the content of the report B</p>
-                                </div>
-                                <div class="tab-pane fade" id="form-fields" role="tabpanel">
-                                    <form class="form-event" action="" method="post">
+                                @endforeach
+
+                                {{-- form --}}
+                                <div class="tab-pane fade show active" id="form-fields" role="tabpanel">
+                                    <form id="report-form" action="{{ route('reports.store') }}" method="post"  enctype="multipart/form-data">
                                         @csrf
 
                                         <div class="form-validation mb-4">
@@ -70,7 +74,7 @@
                                                         title="Select type">
                                                         <option selected disabled></option>
                                                         @foreach (\App\Models\Report::TYPES as $key => $value)
-                                                            <option value="{{$key }}">{{ Str::title($value) }}</option>
+                                                            <option value="{{ $key }}">{{ Str::title($value) }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -86,19 +90,23 @@
                                                 <img id="issueImgPreview" src="" alt="Image Preview" style="display: none;">
                                                 <img id="dummyIssuePicture" src="" alt="Dummy Image">
                                                 <label class="upload-btn" for="issueImgInput">Upload</label>
-                                                <input type="file" class="form-control visually-hidden d-none" id="issueImgInput" name="profilePicture">
+                                                <input type="file"
+                                                    class="form-control visually-hidden d-none"
+                                                    id="issueImgInput"
+                                                    name="report_img"
+                                                    accept="image/*">
                                             </div>
 
                                             <div class="form-group row mt-4">
                                                 <div class="col-lg-12">
-                                                    <label class="css-control css-control-primary css-checkbox" for="val-terms">
+                                                    <label class="css-control css-control-primary css-checkbox" for="is_anonymous">
                                                     <input type="checkbox"
                                                         class="css-control-input valid"
-                                                        id="val-terms"
-                                                        name="val-terms"
+                                                        id="is_anonymous"
+                                                        name="is_anonymous"
                                                         value="1"
                                                         aria-required="true"
-                                                        aria-describedby="val-terms-error"
+                                                        aria-describedby="is_anonymous-error"
                                                         aria-invalid="false"
                                                         checked> <span class="css-control-indicator"></span>&nbsp; Make me anonymous</label>
                                                 </div>
@@ -107,8 +115,7 @@
                                         </div>
 
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default btn-md close-modal">Close</button>
-                                            <button type="submit" class="btn btn-info btn-md">Save</button>
+                                            <button type="submit" class="btn btn-info btn-md">Send <i class="fa fa-paper-plane"></i></button>
                                         </div>
                                     </form>
                                 </div>
@@ -119,16 +126,72 @@
             </div>
         </div>
     </div>
+
+    @include('pages.modals.delete-confirmation')
 </div>
 
 @endsection
 
 @push('scripts')
+<script src="{{ asset('assets/plugins/validation/jquery.validate.min.js') }}"></script>
+@vite(['resources/js/validator.js'])
+
 <script>
     $(document).ready(function(){
         $('#dummyIssuePicture').hide();
         $('#issueImgInput').change(function(){
             previewImage(this);
+        });
+
+        $(document).on('submit', '#report-form', function(event) {
+            event.preventDefault();
+
+            var form = $(this);
+            var url = form.attr('action');
+            var formData = new FormData(form[0]); // Create FormData object to handle form data and files
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData, // Use FormData object instead of form.serialize()
+                contentType: false, // Don't set content type (will be automatically set)
+                processData: false, // Don't process data (already done by FormData)
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    triggerToaster(response.message);
+
+                     // Clear the form
+                    form[0].reset();
+                    $('#dummyIssuePicture').hide();
+                    $('#issueImgPreview').hide();
+                    $('#dummyIssuePicture').hide();
+                },
+                error: function(error) {
+                    // error message here
+                }
+            });
+        });
+
+        let userRoute = ''
+        $(document).on('click', '#delete_report', function(e) {
+            e.preventDefault();
+            userRoute = $(this).attr('data-href');
+
+            $('#deleteConfirmationModal form').attr('action', userRoute);
+
+            $('#deleteConfirmationModal').modal('show');
+        });
+
+        $(document).on('click', '.confirm-delete', function(e) {
+            e.preventDefault();
+            window.axios.delete(userRoute).then((response) => {
+                triggerToaster(response.data.message);
+
+                $('#deleteConfirmationModal').modal('hide');
+                dataTable.ajax.reload();
+            });
         });
     });
 

@@ -396,3 +396,62 @@ $("#service_requests_form").validate({
         jQuery(e).remove();
     },
 });
+
+$.validator.addMethod("safeDescription", function(value, element) {
+    // Define your blacklist patterns here
+    var blacklist = [
+        /<script/i,
+        /<iframe/i,
+        /<object/i,
+        /onload=/i,
+        // Add more patterns if needed
+    ];
+
+    // Check if any of the patterns match the input value
+    for (var i = 0; i < blacklist.length; i++) {
+        if (blacklist[i].test(value)) {
+            return false; // Found a match, return false to indicate invalid input
+        }
+    }
+
+    return true; // No matches found, input is considered valid
+}, "Description contains potentially harmful content.");
+
+$("#report-form").validate({
+    rules: {
+        "category": {
+            required: true,
+        },
+        "description": {
+            required: true,
+            minlength: 15,
+            safeDescription: true,
+        },
+    },
+    messages: {
+        "category": {
+            required: "Please select type of report.",
+        },
+        "description": {
+            required: "Oops, you can't leave this empty.",
+            minlength: "Description must be at least 15 characters long."
+        },
+    },
+
+    ignore: [],
+    errorClass: "invalid-feedback animated fadeInUp",
+    errorElement: "div",
+    errorPlacement: function(e, a) {
+        jQuery(a).parents(".form-group > div").append(e)
+    },
+    highlight: function(e) {
+        jQuery(e).closest(".form-group").removeClass("is-invalid").addClass("is-invalid");
+    },
+    unhighlight: function(element) {
+        $(element).closest(".form-group").removeClass("is-invalid").addClass("is-valid");
+    },
+    success: function(e) {
+        jQuery(e).closest(".form-group").removeClass("is-invalid");
+        jQuery(e).remove();
+    },
+});
