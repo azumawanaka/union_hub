@@ -66,11 +66,11 @@
                                                     <li><a class="dropdown-item" href="#">Mark as Done</a></li>
                                                 </ul>
                                             </div>
-                                        @endif
 
-                                        <div>
-                                            <i class="fa fa-user"></i> {{ $report->is_anonymous ? 'Anonymous' : $report->user->full_name }}
-                                        </div>
+                                            <div>
+                                                <i class="fa fa-user"></i> {{ $report->is_anonymous ? 'Anonymous' : $report->user->full_name }}
+                                            </div>
+                                        @endif
                                         <div class="d-flex py-4">
                                             <div class="col-md-8"><p>{!! $report->description !!}</p></div>
                                             <div class="col-md-4">
