@@ -5,7 +5,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Reports</h4>
+                <h4 class="card-title">{{ auth()->user()->role === 0 ? 'My ' : 'Users ' }}Reports</h4>
                 <div class="basic-list-group">
                     <div class="row">
                         <div class="col-xl-4 col-md-4 col-sm-3 mb-4 mb-sm-0">
@@ -48,14 +48,10 @@
                                     <div class="tab-pane fade{{ auth()->user()->role === 1 && $loop->first ? ' active show' : '' }}" id="list-{{ $report->id }}">
                                         @if (auth()->user()->role === 0)
                                             @if ($report->status === 'pending' || $report->status === 'declined')
-                                                <!-- Dropdown button -->
-                                                <div class="dropdown top-0 end-0 mt-2 text-right">
-                                                    <span class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="fa fa-cog"></i>
-                                                    </span>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <li><a class="dropdown-item" href="#" id="delete_report">Delete</a></li>
-                                                    </ul>
+                                                <div class="text-right">
+                                                    <button type="button" class="btn btn-danger btn-xs">
+                                                        <i class="fa fa-close"></i>
+                                                    </button>
                                                 </div>
                                             @endif
                                         @else
@@ -87,7 +83,7 @@
                                         <div class="col-xl-12 mt-4">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <h4 class="card-title">Notes</h4>
+                                                    <h4 class="card-title">Notes {{ auth()->user()->role === 0 ? 'by admin' : '' }}</h4>
                                                     <div class="basic-list-group">
                                                         <ul class="list-group list-group-flush">
                                                             @foreach ($report->reportNotes as $note)
