@@ -27,7 +27,11 @@
                                         href="#list-{{ $report->id }}"
                                         role="tab"
                                         aria-controls="{{ $report->id }}">
-                                        <i class="fa fa-circle text-{{ \App\Models\Report::STATUS[$report->status]['color'] }} position-absolute circle-stat"></i>
+                                        <i class="fa fa-circle text-{{ \App\Models\Report::STATUS[$report->status]['color'] }} position-absolute circle-stat"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title=""
+                                            data-original-title="{{ \App\Models\Report::STATUS[$report->status]['value'] }}"></i>
                                         {{ \Illuminate\Support\Str::limit($report->description, 80) }}<br/>
                                         <small>{{ $report->reported_at }}</small>
                                     </a>
@@ -55,16 +59,13 @@
                                                 </div>
                                             @endif
                                         @else
-                                            <!-- Dropdown button -->
-                                            <div class="dropdown top-0 end-0 mt-2 text-right">
-                                                <span class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa fa-cog"></i>
-                                                </span>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <li><a class="dropdown-item" href="#">Accept</a></li>
-                                                    <li><a class="dropdown-item" href="#">Decline</a></li>
-                                                    <li><a class="dropdown-item" href="#">Mark as Done</a></li>
-                                                </ul>
+                                            <div class="text-right">
+                                                <button type="button"
+                                                    class="btn btn-primary btn-sm toggle-accept"
+                                                    title=""
+                                                    data-toggle="modal"
+                                                    data-target="#responseModal"
+                                                    data-route="{{ route('report.accept', $report) }}"><i class="fa fa-reply"></i></button>
                                             </div>
 
                                             <div>
@@ -78,9 +79,28 @@
                                             </div>
                                         </div>
                                         <div class="tab-footer">
-                                            <small class="badge badge-dark">{{ \App\Models\Report::TYPES[$report->category] }}</small><br/>
+                                            <small class="badge badge-dark">{{  \App\Models\Report::TYPES[$report->category] ?? '' }}</small><br/>
                                             <small class="text-muted">{{ $report->reported_at }}</small>
                                         </div>
+
+                                        @if (count($report->reportNotes) > 0)
+                                        <div class="col-xl-12 mt-4">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h4 class="card-title">Notes</h4>
+                                                    <div class="basic-list-group">
+                                                        <ul class="list-group list-group-flush">
+                                                            @foreach ($report->reportNotes as $note)
+                                                                <li class="list-group-item">{!! $note->note !!}</br>
+                                                                    <small>{{ $note->created_at->diffForHumans() }}</small>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endif
                                     </div>
                                 @endforeach
 
@@ -97,6 +117,7 @@
     </div>
 
     @include('pages.modals.delete-confirmation')
+    @include('pages.reports.modal.response')
 </div>
 
 @endsection
@@ -164,6 +185,38 @@
 
                 $('#deleteConfirmationModal').modal('hide');
                 dataTable.ajax.reload();
+            });
+        });
+
+        let acceptRoute = ''
+        $(document).on('click', '.toggle-accept', function(event) {
+            acceptRoute = $(this).attr('data-route');
+        });
+
+        $(document).on('submit', '#form-response', function(event) {
+            event.preventDefault();
+
+            var form = $(this);
+
+            $.ajax({
+                url: acceptRoute,
+                type: 'POST',
+                data: form.serialize(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    triggerToaster(response.message);
+
+                    $('#responseModal').modal('hide');
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                },
+                error: function(error) {
+                    // error message here
+                }
             });
         });
     });

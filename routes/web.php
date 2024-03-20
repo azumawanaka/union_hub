@@ -74,5 +74,7 @@ Route::middleware(['admin'])->group(function () {
     Route::post('clients/all', [\App\Http\Controllers\ClientController::class, 'getAllClients'])->name('clients.all');
     Route::get('clients/{id}/get_client', [\App\Http\Controllers\ClientController::class, 'getClientById'])->name('clients.info');
     Route::put('clients/{id}/update_client', [\App\Http\Controllers\ClientController::class, 'updateClient'])->name('clients.update_client');
+
+    Route::post('reports/{report}/acccept', [\App\Http\Controllers\ReportController::class, 'accept'])->name('report.accept');
 });
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\GetAllReportsAction;
 use App\Actions\StoreReportAction;
+use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,6 +44,17 @@ class ReportController extends Controller
         } catch (\Throwable $th) {
             return response()->json($this->responseMsg($th->getMessage(), 'error'));
         }
+    }
+
+    public function accept(Report $report, Request $request)
+    {
+        if (isset($request->note) && !empty($request->note)) {
+            $report->reportNotes()->create(['note' => $request->note]);
+        }
+
+        $report->update(['status' => $request->status]);
+
+        return response()->json($this->responseMsg('Response was successfully sent.', 'success'));
     }
 
     private function responseMsg($msg, $status): array
