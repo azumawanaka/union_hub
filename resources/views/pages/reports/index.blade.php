@@ -89,7 +89,10 @@
                                                     <div class="basic-list-group">
                                                         <ul class="list-group list-group-flush">
                                                             @foreach ($report->reportNotes as $note)
-                                                                <li class="list-group-item">{!! $note->note !!}</br>
+                                                                <li class="list-group-item pl-4">
+                                                                    <span class="fa fa-close text-muted report-close-icon toggle-delete position-absolute"
+                                                                        data-route="{{ route('report.note.delete', $note) }}"></span>
+                                                                    {!! $note->note !!}</br>
                                                                     <small>{{ $note->created_at->diffForHumans() }}</small>
                                                                 </li>
                                                             @endforeach

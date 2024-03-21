@@ -6,6 +6,7 @@ use App\Actions\GetAllReportsAction;
 use App\Actions\StoreReportAction;
 use App\Actions\UpdateReportsOnLoad;
 use App\Models\Report;
+use App\Models\ReportNote;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -71,6 +72,16 @@ class ReportController extends Controller
         try {
             $report->delete();
             return response()->json($this->responseMsg('Response was successfully deleted.', 'success'));
+        } catch (\Throwable $th) {
+            return response()->json($this->responseMsg($th->getMessage(), 'error'));
+        }
+    }
+
+    public function deleteNote(ReportNote $reportNote)
+    {
+        try {
+            $reportNote->delete();
+            return response()->json($this->responseMsg('Note was successfully deleted.', 'success'));
         } catch (\Throwable $th) {
             return response()->json($this->responseMsg($th->getMessage(), 'error'));
         }

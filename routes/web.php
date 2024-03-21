@@ -77,5 +77,6 @@ Route::middleware(['admin'])->group(function () {
     Route::put('clients/{id}/update_client', [\App\Http\Controllers\ClientController::class, 'updateClient'])->name('clients.update_client');
 
     Route::post('reports/{report}/acccept', [\App\Http\Controllers\ReportController::class, 'accept'])->name('report.accept');
+    Route::delete('reports/note/{reportNote}', [\App\Http\Controllers\ReportController::class, 'deleteNote'])->name('report.note.delete');
 });
 
