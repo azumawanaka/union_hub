@@ -90,8 +90,10 @@
                                                         <ul class="list-group list-group-flush">
                                                             @foreach ($report->reportNotes as $note)
                                                                 <li class="list-group-item pl-4">
+                                                                    @if (auth()->user()->role === 1)
                                                                     <span class="fa fa-close text-muted report-close-icon toggle-delete position-absolute"
                                                                         data-route="{{ route('report.note.delete', $note) }}"></span>
+                                                                    @endif
                                                                     {!! $note->note !!}</br>
                                                                     <small>{{ $note->created_at->diffForHumans() }}</small>
                                                                 </li>
