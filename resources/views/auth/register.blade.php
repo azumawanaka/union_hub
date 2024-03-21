@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="login-form-bg h-100">
+<div class="login-form-bg h-100" style="background-image: url('assets/images/planting.jpg')">
     <div class="container h-100">
         <div class="row justify-content-center h-100">
             <div class="col-xl-6">
@@ -55,7 +55,7 @@
                                         name="password"
                                         required
                                         autocomplete="current-password"
-                                        placeholder="***********">
+                                        placeholder="Enter password">
 
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
@@ -70,7 +70,7 @@
                                         name="password_confirmation"
                                         required
                                         autocomplete="new-password"
-                                        placeholder="***********">
+                                        placeholder="Re-enter password">
                                 </div>
                                 <button type="submit" class="btn login-form__btn submit w-100 text-white">{{ __('Register') }}</button>
                             </form>
