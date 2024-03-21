@@ -23,7 +23,7 @@
                                         value="{{ old('first_name') }}"
                                         required
                                         autofocus
-                                        placeholder="Enter first name">
+                                        placeholder="Enter name">
 
                                     @error('first_name')
                                         <span class="invalid-feedback" role="alert">
