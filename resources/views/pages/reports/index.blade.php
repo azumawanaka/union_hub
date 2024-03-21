@@ -49,7 +49,9 @@
                                         @if (auth()->user()->role === 0)
                                             @if ($report->status === 'pending' || $report->status === 'declined')
                                                 <div class="text-right">
-                                                    <button type="button" class="btn btn-danger btn-xs">
+                                                    <button type="button"
+                                                        class="btn btn-danger btn-xs toggle-delete"
+                                                        data-route="{{ route('report.delete', $report) }}">
                                                         <i class="fa fa-close"></i>
                                                     </button>
                                                 </div>
@@ -165,9 +167,9 @@
         });
 
         let userRoute = ''
-        $(document).on('click', '#delete_report', function(e) {
+        $(document).on('click', '.toggle-delete', function(e) {
             e.preventDefault();
-            userRoute = $(this).attr('data-href');
+            userRoute = $(this).attr('data-route');
 
             $('#deleteConfirmationModal form').attr('action', userRoute);
 
@@ -180,7 +182,10 @@
                 triggerToaster(response.data.message);
 
                 $('#deleteConfirmationModal').modal('hide');
-                dataTable.ajax.reload();
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
             });
         });
 

@@ -57,6 +57,16 @@ class ReportController extends Controller
         return response()->json($this->responseMsg('Response was successfully sent.', 'success'));
     }
 
+    public function destroy(Report $report)
+    {
+        try {
+            $report->delete();
+            return response()->json($this->responseMsg('Response was successfully deleted.', 'success'));
+        } catch (\Throwable $th) {
+            return response()->json($this->responseMsg($th->getMessage(), 'error'));
+        }
+    }
+
     private function responseMsg($msg, $status): array
     {
         return [

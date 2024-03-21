@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
     Route::post('reports', [\App\Http\Controllers\ReportController::class, 'store'])->name('reports.store');
+    Route::delete('reports/{report}', [\App\Http\Controllers\ReportController::class, 'destroy'])->name('report.delete');
 });
 
 Route::middleware(['admin'])->group(function () {
