@@ -5,7 +5,7 @@ namespace App\Actions;
 use App\Models\Report;
 use App\Models\User;
 
-class GetAllReportsAction
+class GetTotalNewReportsAction
 {
     protected $model;
 
@@ -19,10 +19,12 @@ class GetAllReportsAction
         $isAdmin = auth()->user()->role === User::ROLES['admin'];
         $query = $this->model->query();
 
-        if (!$isAdmin) {
-            $query->where('user_id', auth()->user()->id);
+        if ($isAdmin) {
+            $count = $query->whereIsNew(true)->count();
+        } else {
+            $count = $query->where('user_id', auth()->user()->id)->count();
         }
 
-        return $query->orderBy('updated_at', 'desc');
+        return $count;
     }
 }

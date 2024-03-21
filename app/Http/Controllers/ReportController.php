@@ -4,14 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Actions\GetAllReportsAction;
 use App\Actions\StoreReportAction;
+use App\Actions\UpdateReportsOnLoad;
 use App\Models\Report;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ReportController extends Controller
 {
-    public function index(Request $request, GetAllReportsAction $getAllReportsAction, int|string $limit = 10)
-    {
+    public function index(
+        Request $request,
+        GetAllReportsAction $getAllReportsAction,
+        UpdateReportsOnLoad $updateReportsOnLoad,
+        int|string $limit = 10
+    ) {
+        if (auth()->user()->role === User::ROLES['admin']) {
+            $updateReportsOnLoad->execute();
+        }
         return view('pages.reports.index', [
             'reports' => $getAllReportsAction->execute()->paginate($limit),
         ]);

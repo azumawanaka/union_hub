@@ -54,6 +54,11 @@ class Report extends Model
         'note_by_admin',
         'status',
         'is_anonymous',
+        'is_new',
+    ];
+
+    protected $casts = [
+        'is_new' => 'boolean',
     ];
 
     public function user(): BelongsTo
